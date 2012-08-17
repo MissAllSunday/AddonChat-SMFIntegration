@@ -34,7 +34,7 @@
 	global $smcFunc, $context, $db_prefix;
 
 	/* Sorry! */
-	PostLimitCheck();
+	AddonChatCheck();
 
 	db_extend('packages');
 
@@ -44,34 +44,88 @@
 			'table_name' => 'addonchat',
 			'columns' => array(
 				array(
-					'name' => 'id_user',
+					'name' => 'edition_code',
 					'type' => 'int',
-					'size' => 5,
+					'size' => 6,
 					'null' => false,
 				),
 				array(
-					'name' => 'id_boards',
+					'name' => 'modules',
 					'type' => 'varchar',
 					'size' => 255,
 					'default' => '',
 				),
 				array(
-					'name' => 'post_limit',
+					'name' => 'remote_auth_capable',
 					'type' => 'int',
 					'size' => 5,
 					'null' => false,
 				),
 				array(
-					'name' => 'post_count',
+					'name' => 'full_service',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'expiration_date',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'remote_auth_enable',
 					'type' => 'int',
 					'size' => 5,
 					'null' => false,
+				),
+				array(
+					'name' => 'remote_auth_url',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'server_name',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'tcp_port',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'control_panel_login',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'chat_title',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'product_code',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
+				),
+				array(
+					'name' => 'customer_code',
+					'type' => 'varchar',
+					'size' => 255,
+					'default' => '',
 				),
 			),
 			'indexes' => array(
 				array(
 					'type' => 'primary',
-					'columns' => array('id_user')
+					'columns' => array('customer_code')
 				),
 			),
 			'if_exists' => 'ignore',
@@ -81,25 +135,7 @@
 
 		$smcFunc['db_create_table']($db_prefix . $table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
 
-		/* Add the Scheduled Task */
-		$smcFunc['db_insert']('ignore',
-			'{db_prefix}scheduled_tasks',
-			array(
-				'id_task' => 'int',
-				'next_time' => 'int',
-				'time_offset' => 'int',
-				'time_regularity' => 'int',
-				'time_unit' => 'string',
-				'disabled' => 'int',
-				'task' => 'string',
-			),
-			array(0,0,0,1,'d',0,'postLimit'
-			),
-			array('task')
-		);
-	}
-
-	function PostLimitCheck()
+	function AddonChatCheck()
 	{
 		if (version_compare(PHP_VERSION, '5.2.0', '<'))
 			fatal_error('This mod needs PHP 5.2 or greater. You will not be able to install/use this mod, contact your host and ask for a php upgrade.');
