@@ -96,10 +96,64 @@ class AddonChat
 		if (is_int($data[0]) && preg_match('\(.+\)', $data[1]))
 		{
 			/* Make a quick query to see if theres data already saved */
+			$query->params(
+				'rows' => '*',
+			);
+			$query->getData(null, false);
+			$result = $query->dataResult();
 
 			/* There is, so make an update */
+			if (!empty($result))
+			{
+				/* Update the cache */
+				$this->killCache();
+
+				$query->params(
+					array(
+						'set' => 'read = {int:read}',
+					),
+					array(
+						'edition_code' => $data[0],
+						'modules' => $data[1],
+						'remote_auth_capable' => $data[2],
+						'full_service' => $data[3],
+						'expiration_date' => $data[4],
+						'remote_auth_enable' => $data[5],
+						'remote_auth_url' => $data[6],
+						'server_name' => $data[7],
+						'tcp_port' => $data[8],
+						'control_panel_login' => $data[9],
+						'chat_title' => $data[10],
+						'product_code' => $data[11],
+						'customer_code' => $data[12],
+					)
+				);
+				$query->updateData();
+			}
 
 			/* No data, create the rows */
+			else
+				$query->insertData(
+				array(
+						'edition_code' => 'int',
+						'modules' => 'string',
+						'remote_auth_capable' => 'int',
+						'full_service' => 'string',
+						'expiration_date' => 'string',
+						'remote_auth_enable' => 'int',
+						'remote_auth_url' =>'string',
+						'server_name' => 'string',
+						'tcp_port' => 'string',
+						'control_panel_login' => 'string',
+						'chat_title' => 'string',
+						'product_code' => 'string',
+						'customer_code' => 'string',
+				),
+				$data,
+				array(
+					'customer_code',
+				)
+			);
 		}
 
 		/* Return the data */
