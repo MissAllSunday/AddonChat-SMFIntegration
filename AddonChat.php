@@ -28,7 +28,19 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-function wrapper_profile_page(){ AddonChat::profileDispatch(); }
+/* Autoload */
+function __autoload($class_name)
+{
+	global $sourcedir;
+
+	$file_path = $sourcedir . AddonChat::$name .'/'. $class_name . '.php';
+
+	if(file_exists($file_path))
+		require_once($file_path);
+
+	else
+		return false;
+}
 
 class AddonChat
 {
@@ -45,7 +57,12 @@ class AddonChat
 
 	protected function query()
 	{
-		return new AddonChatQuery(self::$_dbTableName);
+		return new AddonChatDB(self::$_dbTableName);
+	}
+	
+	protected function tools()
+	{
+		return new AddonChatTools(self::$_dbTableName);
 	}
 
 	/*
@@ -76,7 +93,7 @@ class AddonChat
 		/* Attempts to fetch data from a URL, regardless of PHP's allow_url_fopen setting */
 		$data = fetch_web_data($url);
 
-		/* Ups, something went wrong, tell the user to try later */
+		/* Oops, something went wrong, tell the user to try later */
 		if ($data == null)
 			fatal_lang_error(self::$name'_error_fetching_server', false);
 
@@ -155,6 +172,8 @@ class AddonChat
 				)
 			);
 		}
+
+		/* No? seomthing went wrong then */
 
 		/* Return the data */
 		return $data;

@@ -10,7 +10,7 @@
 	<readme parsebbc="true"></readme>
 		<modification>AddonChat.xml</modification>
 		<require-file name="AddonChat.php" destination="$sourcedir">Source file</require-file>
-		<require-file name="Subs-AddonChat.php" destination="$sourcedir">Source file</require-file>
+		<require-dir name="AddonChat" destination="$sourcedir">Library folder</require-dir>
 		<require-file name="AddonChat.template.php" destination="$themedir">Template file</require-file>
 		<require-dir name="languages" destination="$themedir">Translations folder</require-dir>
 		<redirect url="$scripturl?action=admin;area=modsettings" timeout="3000"></redirect>
