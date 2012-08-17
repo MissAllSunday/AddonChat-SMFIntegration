@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
+<package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
+	<id>Suki:AddonChat</id>
+	<name>AddonChat</name>
+	<version>1.0</version>
+	<type>modification</type>
+
+	<install>
+	<readme parsebbc="true"></readme>
+		<modification>AddonChat.xml</modification>
+		<require-file name="AddonChat.php" destination="$sourcedir">Source file</require-file>
+		<require-file name="Subs-AddonChat.php" destination="$sourcedir">Source file</require-file>
+		<require-file name="AddonChat.template.php" destination="$themedir">Template file</require-file>
+		<require-dir name="languages" destination="$themedir">Translations folder</require-dir>
+		<redirect url="$scripturl?action=admin;area=modsettings" timeout="3000"></redirect>
+	</install>
+
+	<uninstall>
+		<modification reverse="true">AddonChat.xml</modification>
+		<remove-file name="$sourcedir/AddonChat.php" />
+		<remove-file name="$sourcedir/Subs-AddonChat.php" />
+		<remove-file name="$languagedir/AddonChat.english.php" />
+		<remove-file name="$themedir/AddonChat.template.php" />
+		<remove-file name="$languagedir/AddonChat.english.php" />
+	</uninstall>
+
+</package-info>

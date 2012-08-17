@@ -1,0 +1,190 @@
+<?xml version="1.0"?>
+<!DOCTYPE modification SYSTEM "http://www.simplemachines.org/xml/modification">
+
+<modification xmlns="http://www.simplemachines.org/xml/modification" xmlns:smf="http://www.simplemachines.org/">
+	<id>Suki:AddonChat</id>
+	<version>1.0</version>
+
+	<file name="$boarddir/index.php">
+		<operation>
+			<search position="replace"><![CDATA[// And important includes.]]></search>
+			<add><![CDATA[// And important includes.
+require_once($sourcedir . '/AddonChat.php');]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA['xmlhttp' => array('Xml.php', 'XMLhttpMain'),]]></search>
+			<add><![CDATA['xmlhttp' => array('Xml.php', 'XMLhttpMain'),
+		'ptajax' => array('AddonChat.php', 'AddonChat::ajax'),]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManageSettings.php">
+		<operation>
+			<search position="replace"><![CDATA[$config_vars = array(
+		// Mod authors, add any settings UNDER this line. Include a comma at the end of the line and don't remove this statement!!]]></search>
+			<add><![CDATA[loadLanguage('AddonChat');
+
+	$config_vars = array(
+		// Mod authors, add any settings UNDER this line. Include a comma at the end of the line and don't remove this statement!!
+		$txt['AddonChat_title'],
+		array('check', 'AddonChat_enable', 'subtext' => $txt['AddonChat_enable_sub']),
+		array('text', 'AddonChat_limit', 'subtext' => $txt['AddonChat_limit_sub']),
+		'',]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Profile.php">
+		<operation>
+			<search position="replace"><![CDATA['viewwarning' => array(
+					'label' => $txt['profile_view_warnings'],
+					'enabled' => in_array('w', $context['admin_features']) && $modSettings['warning_settings'][0] == 1 && $cur_profile['warning'] && $context['user']['is_owner'] && !empty($modSettings['warning_show']),
+					'file' => 'Profile-View.php',
+					'function' => 'viewWarning',
+					'permission' => array(
+						'own' => 'profile_view_own',
+						'any' => 'issue_warning',
+					),
+				),]]></search>
+			<add><![CDATA['viewwarning' => array(
+					'label' => $txt['profile_view_warnings'],
+					'enabled' => in_array('w', $context['admin_features']) && $modSettings['warning_settings'][0] == 1 && $cur_profile['warning'] && $context['user']['is_owner'] && !empty($modSettings['warning_show']),
+					'file' => 'Profile-View.php',
+					'function' => 'viewWarning',
+					'permission' => array(
+						'own' => 'profile_view_own',
+						'any' => 'issue_warning',
+					),
+				),
+				'AddonChat' => array(
+					'label' => AddonChat::tools()->getText('profile_panel'),
+					'enabled' => !empty($modSettings['AddonChat_enable']) ? 1 : 0,
+					'file' => 'AddonChat.php',
+					'function' => 'wrapper_profile_page',
+					'subsections' => array(
+						'list' => array(AddonChat::tools()->getText('profile_list'), array('profile_view_own', 'change_AddonChat')),
+						'create' => array(AddonChat::tools()->getText('profile_create'), array('profile_view_own', 'change_AddonChat')),
+					),
+					'permission' => array(
+						'own' => 'profile_view_own',
+						'any' => 'change_AddonChat',
+					),
+				),]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/Post.php">
+		<operation>
+			<search position="replace"><![CDATA[// Posting an event?]]></search>
+			<add><![CDATA[/* AddonChat */
+	if (!empty($modSettings['AddonChat_enable']))
+	{
+		$context['html_headers'] .= '
+		<script type="text/javascript">!window.jQuery && document.write(unescape(\'%3Cscript src="http://code.jquery.com/jquery.min.js"%3E%3C/script%3E\'))</script>';
+		$context['AddonChat']['list'] = '';
+		$tpl = new AddonChat($user_info['id']);
+
+		/* if there is a default template lets use it */
+		$tplDefault = $tpl->getDefaultFromUser();
+		$context['AddonChat']['default'] = !empty($tplDefault) ? $tplDefault : '';
+
+		/* Get the templates */
+		$tplT = $tpl->getTemplatesByUser();
+
+		/* Show the options */
+		if (!empty($tplT))
+		{
+			/* Create the dropdown list */
+			$context['AddonChat']['list'] .= '<select id="AddonChat_dropdown" name="AddonChat_dropdown" style="font-size: x-small;"><option id="">   </option>';
+
+			foreach($tplT as $t)
+				$context['AddonChat']['list'] .= '<option id="'. $t['id'] .'">'. $t['title'] .'</option>';
+
+			$context['AddonChat']['list'] .= '</select>';
+		}
+
+		else
+			$context['AddonChat']['list'] = AddonChat::tools()->getText('profile_no_templates');
+	}
+	/* AddonChat */
+
+	// Posting an event?]]></add>
+		</operation>
+	</file>
+
+	<file name="$sourcedir/ManagePermissions.php">
+		<operation>
+			<search position="replace"><![CDATA[$permissionList = array(
+		'membergroup' => array(]]></search>
+			<add><![CDATA[loadLanguage('AddonChat');
+	$permissionList = array(
+		'membergroup' => array(
+			'change_AddonChat' => array(false, 'general', 'view_basic_info'),]]></add>
+		</operation>
+	</file>
+
+	<file name="$themedir/Post.template.php">
+		<operation>
+			<search position="replace"><![CDATA[// Now show the subject box for this post.]]></search>
+			<add><![CDATA[/* Show the template dropdown */
+	if (!empty($modSettings['AddonChat_enable']))
+		echo '<dt>
+							<span>', AddonChat::tools()->getText('profile_list') ,'</span>
+						</dt>
+						<dd>', $context['AddonChat']['list'] ,'</dd>';
+
+	// Now show the subject box for this post.]]></add>
+		</operation>
+		<operation>
+			<search position="replace"><![CDATA[// The functions used to preview a posts without loading a new page.]]></search>
+			<add><![CDATA[/* AddonChat mod */
+	global $user_info;
+
+		if (!empty($modSettings['AddonChat_enable']))
+		{
+			if (!empty($context['AddonChat']['default']))
+				echo '
+			jQuery.ajax(
+			{
+				type: \'POST\',
+				url: smf_scripturl + \'?action=ptajax;u='. $user_info['id'] .';defaulttemplate=1\',
+				data: ({title : '. $user_info['id'] .'}),
+				cache: false,
+				success: function(html)
+				{
+					$("#message").html(html);
+				},
+			});';
+
+			echo '
+	jQuery(document).ready(function()
+	{
+		$("#AddonChat_dropdown" ).change(function() {
+			var tplValue = $( "#AddonChat_dropdown" ).val();
+
+			jQuery.ajax(
+			{
+				type: \'POST\',
+				url: smf_scripturl + \'?action=ptajax;u='. $user_info['id'] .';\',
+				data: ({title : tplValue}),
+				cache: false,
+				success: function(html)
+				{
+					$("#message").html(html);
+				},
+			});
+		});
+	});';
+		}
+
+	// The functions used to preview a posts without loading a new page.]]></add>
+		</operation>
+	</file>
+
+	<!-- <file name="$sourcedir/.php">
+		<operation>
+			<search position="replace"><![CDATA[]]></search>
+			<add><![CDATA[]]></add>
+		</operation>
+	</file> -->
+
+</modification>
