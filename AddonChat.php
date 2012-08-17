@@ -28,6 +28,13 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+/**
+ * Wrapper function
+ *
+ * SMF cannot handle static methods being called via a variable: $static_method();
+ */
+function AddonChat_SubActions_Wrapper(){AddonChat::subActions();};
+
 /* Autoload */
 function __autoload($class_name)
 {
@@ -55,14 +62,14 @@ class AddonChat
 	{
 	}
 
-	protected function query()
+	protected static function query()
 	{
 		return new AddonChatDB(self::$_dbTableName);
 	}
-	
-	protected function tools()
+
+	protected static function tools()
 	{
-		return new AddonChatTools(self::$_dbTableName);
+		return AddonChatTools::getInstance();
 	}
 
 	/*
@@ -77,8 +84,8 @@ class AddonChat
 		global $sourcedir;
 
 		/* Set what we need */
-		$query = $this->query();
-		$tools = $this->tools();
+		$query = self::query();
+		$tools = self::tools();
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
@@ -177,5 +184,146 @@ class AddonChat
 
 		/* Return the data */
 		return $data;
+	}
+
+	/**
+	 * Builds the admin button via hooks
+	 *
+	 * @access public
+	 * @static
+	 * @param array The admin menu
+	 * @return void
+	 */
+	static function admin(&$admin_areas)
+	{
+		$tools = self::tools();
+
+		$admin_areas['config']['areas'][self::$name] = array(
+					'label' => $tools->getText('default_menu'),
+					'file' => self::$name .'.php',
+					'function' => 'AddonChat_SubActions_Wrapper',
+					'icon' => 'posts.gif',
+					'subsections' => array(
+						'general' => array($tools->getText('general_settings')),
+						'look' => array($tools->getText('look_settings'))
+				),
+		);
+	}
+
+	/**
+	 * Creates the pages for the admin panel via hooks
+	 *
+	 * @access public
+	 * @static
+	 * @param boolean
+	 * @return void
+	 */
+	static function subActions()
+	{
+		global $scripturl, $context, $sourcedir;
+
+		/* We need this */
+		require_once($sourcedir . '/ManageSettings.php');
+
+		/* Get the text strings */
+		$tools = self::tools();
+
+		/* Set the page title */
+		$context['page_title'] = $tools->getText('default_menu');
+
+		$subActions = array(
+			'general' => 'self::generalSettings',
+			'look' => 'self::lookSettings'
+		);
+
+		loadGeneralSettingParameters($subActions, 'general');
+
+		$context[$context['admin_menu_name']]['tab_data'] = array(
+			'title' => $tools->getText('default_menu'),
+			'description' => $tools->getText('admin_panel_desc'),
+			'tabs' => array(
+				'general' => array(),
+				'buttons' => array()
+			),
+		);
+
+		call_user_func($subActions[$_REQUEST['sa']]);
+	}
+
+	/**
+	 * The General settings page
+	 *
+	 * @access public
+	 * @static
+	 * @param boolean
+	 * @return void
+	 */
+	static function generalSettings($return_config = false)
+	{
+		global $scripturl, $context, $sourcedir;
+
+		/* We need this */
+		require_once($sourcedir . '/ManageServer.php');
+
+		/* Generate the settings */
+		$config_vars = array(
+			array('check', 'enable_general', 'subtext' => $tools->getText('enable_general_sub']),
+			array('text', 'number_id', 'size' => 36, 'subtext' => $tools->getText('number_is_sub']),
+			array('text', 'pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub']),
+		);
+
+		if ($return_config)
+			return $config_vars;
+
+		/* Set some settings for the page */
+		$context['post_url'] = $scripturl . '?action=admin;area=', self::$name ,';sa=general;save';
+		$context['page_title'] = $tools->getText('default_menu');
+
+		if (isset($_GET['save']))
+		{
+			/* Save the settings */
+			checkSession();
+			saveDBSettings($config_vars);
+			redirectexit('action=admin;area=', self::$name ,';sa=general');
+		}
+
+		prepareDBSettingContext($config_vars);
+	}
+
+	/**
+	 * The look settings page
+	 *
+	 * @access public
+	 * @static
+	 * @param boolean
+	 * @return void
+	 */
+	static function lookSettings($return_config = false)
+	{
+		global$scripturl, $context, $sourcedir;
+
+		/* We need this */
+		require_once($sourcedir . '/ManageServer.php');
+
+		/* Generate the settings */
+		$config_vars = array(
+			/* currently empty! */
+		);
+
+		if ($return_config)
+			return $config_vars;
+
+		/* Page settings */
+		$context['post_url'] = $scripturl . '?action=admin;area=', self::$name ,';sa=look;save';
+		$context['page_title'] = $tools->getText('default_menu');
+
+		/* Save */
+		if (isset($_GET['save']))
+		{
+			checkSession();
+			saveDBSettings($config_vars);
+			redirectexit('action=admin;area=', self::$name ,';sa=buttons');
+		}
+		prepareDBSettingContext($config_vars);
 	}
 }
