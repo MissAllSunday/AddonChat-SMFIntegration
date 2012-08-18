@@ -28,16 +28,16 @@
 global $scripturl, $txt;
 
 $txt['AddonChat_title_main'] = 'Chat';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
+$txt['AddonChat_default_menu'] = 'Chat Integration';
+$txt['AddonChat_general_settings'] = 'Settings';
+$txt['AddonChat_look_settings'] = 'Look settings';
+$txt['AddonChat_admin_panel_des'] = 'Fomr here you can configure your AddonChat integration.';
+$txt['AddonChat_enable_general'] = 'Enable the addonChat integration';
+$txt['AddonChat_enable_general_sub'] = 'This is the master setting, needs to be on for the mod to work properly.';
+$txt['AddonChat_number_id'] = 'Your number ID';
+$txt['AddonChat_number_id_sub'] = 'Numeric portion of AddonChat account number.';
+$txt['AddonChat_pass'] = 'Your addonChat password';
+$txt['AddonChat_pass_sub'] = 'The integration script needs your password to connect with the chat server.';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
