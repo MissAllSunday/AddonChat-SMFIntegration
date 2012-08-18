@@ -210,12 +210,12 @@ class AddonChat
 	}
 
 	/* Permissions hook */
-	static function permissions(&$permissionGroups, &$permissionList)
+	public static function permissions(&$permissionGroups, &$permissionList)
 	{
 	}
 
 	/* Button menu hook */
-	static function menu(&$menu_buttons)
+	public static function menu(&$menu_buttons)
 	{
 		global $scripturl;
 
@@ -250,7 +250,7 @@ class AddonChat
 	 * @param array The admin menu
 	 * @return void
 	 */
-	static function admin(&$admin_areas)
+	public static function admin(&$admin_areas)
 	{
 		$tools = self::tools();
 
@@ -274,7 +274,7 @@ class AddonChat
 	 * @param boolean
 	 * @return void
 	 */
-	static function subActions()
+	public static function subActions()
 	{
 		global $scripturl, $context, $sourcedir;
 
@@ -299,7 +299,7 @@ class AddonChat
 			'description' => $tools->getText('admin_panel_desc'),
 			'tabs' => array(
 				'general' => array(),
-				'buttons' => array()
+				'look' => array()
 			),
 		);
 
@@ -316,16 +316,18 @@ class AddonChat
 	 */
 	static function generalSettings($return_config = false)
 	{
-		global $scripturl, $context, $sourcedir;
+		global $scripturl, $txt, $context, $sourcedir;
 
 		/* We need this */
 		require_once($sourcedir . '/ManageServer.php');
 
+		$tools = self::tools();
+
 		/* Generate the settings */
 		$config_vars = array(
-			array('check', 'enable_general', 'subtext' => $tools->getText('enable_general_sub')),
-			array('text', 'number_id', 'size' => 36, 'subtext' => $tools->getText('number_is_sub')),
-			array('text', 'pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+			array('check', self::$name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
+			array('text', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_is_sub')),
+			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
 		);
 
 		if ($return_config)
@@ -378,7 +380,7 @@ class AddonChat
 		{
 			checkSession();
 			saveDBSettings($config_vars);
-			redirectexit('action=admin;area=', self::$name ,';sa=buttons');
+			redirectexit('action=admin;area=', self::$name ,';sa=look');
 		}
 		prepareDBSettingContext($config_vars);
 	}
