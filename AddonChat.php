@@ -186,6 +186,45 @@ class AddonChat
 		return $data;
 	}
 
+	/* Action hook */
+	public static function actions(&$actions)
+	{
+		$actions['chat'] = array(self::$name .'.php', self::$name .'::main');
+	}
+
+	/* Permissions hook */
+	static function permissions(&$permissionGroups, &$permissionList)
+	{
+	}
+
+	/* Button menu hook */
+	static function menu(&$menu_buttons)
+	{
+		global $scripturl;
+
+		$tools = self::tools();
+
+		$insert = self::$tools->enable('menu_position') ? self::$tools->getSetting('menu_position') : 'home';
+
+		/* Let's add our button next to the user's selection...
+		 * Thanks to SlammedDime (http://mattzuba.com) for the example */
+		$counter = 0;
+		foreach ($menu_buttons as $area => $dummy)
+			if (++$counter && $area == $faqmod_insert)
+				break;
+
+		$menu_buttons = array_merge(
+			array_slice($menu_buttons, 0, $counter),
+			array('chat' => array(
+			'title' => self::$tools->get('title_main', 'Text'),
+			'href' => $scripturl . '?action=faq',
+			'show' => allowedTo('faqperview'),
+			'sub_buttons' => array(),
+		)),
+			array_slice($menu_buttons, $counter)
+		);
+	}
+
 	/**
 	 * Builds the admin button via hooks
 	 *
