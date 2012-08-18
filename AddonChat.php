@@ -197,6 +197,7 @@ class AddonChat
 		);
 		$context['canonical_url'] = $scripturl . '?action=chat';
 		$context['sub_template'] = 'addonChat_main';
+		$context['robot_no_index'] = true;
 	}
 
 	/* Action hook */
