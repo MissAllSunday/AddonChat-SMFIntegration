@@ -65,7 +65,7 @@ class AddonChatTools
 	 * @var string The name of your mod or some unique identifier, you should replace this with your own identifier/mod name
 	 * @access protected
 	 */
-	protected $_name = AddonChat:$name;
+	protected $_name = 'AddonChat';
 
 	/**
 	 * @var string The pattern used to search the modsettings and txt arrays, should be: /identifier_/ this is defined with the value of $_name

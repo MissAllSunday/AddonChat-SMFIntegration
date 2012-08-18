@@ -40,7 +40,7 @@ function __autoload($class_name)
 {
 	global $sourcedir;
 
-	$file_path = $sourcedir . AddonChat::$name .'/'. $class_name . '.php';
+	$file_path = $sourcedir .'/'. AddonChat::$name .'/'. $class_name .'.php';
 
 	if(file_exists($file_path))
 		require_once($file_path);
@@ -55,7 +55,7 @@ class AddonChat
 	protected $_data = array();
 	protected $_rows = array();
 	static protected $_dbTableName = 'addonchat';
-	static protected $name = 'AddonChat';
+	static public $name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
 	public function __construct($user)
@@ -64,6 +64,9 @@ class AddonChat
 
 	protected static function query()
 	{
+		global $sourcedir;
+
+		require_once($sourcedir . AddonChat::$name .'/'. $class_name . '.php');
 		return new AddonChatDB(self::$_dbTableName);
 	}
 
@@ -89,20 +92,20 @@ class AddonChat
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
-			fatal_lang_error(self::$name'_no_pass_set', false);
+			fatal_lang_error(self::$name .'_no_pass_set', false);
 
 		/* Requires a function in a source file far far away... */
 		require_once($sourcedir .'/Subs-Package.php');
 
 		/* Build the url */
-		$url = self::$serverUrl. '?id=', $tools->getSetting('number_id') ,'&md5pw= ', urlencode($tools->getSetting('pass'));
+		$url = self::$serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw= '. urlencode($tools->getSetting('pass'));
 
 		/* Attempts to fetch data from a URL, regardless of PHP's allow_url_fopen setting */
 		$data = fetch_web_data($url);
 
 		/* Oops, something went wrong, tell the user to try later */
 		if ($data == null)
-			fatal_lang_error(self::$name'_error_fetching_server', false);
+			fatal_lang_error(self::$name .'_error_fetching_server', false);
 
 		/* We got something */
 		$data = explode('\n', $data);
@@ -114,15 +117,15 @@ class AddonChat
 
 		/* The server says no */
 		if ($data[0] == '-1')
-			fatal_lang_error(self::$name'_error_from_server', false, $data[2]);
+			fatal_lang_error(self::$name .'_error_from_server', false, $data[2]);
 
 		/* Make sure the data is what is supposed to be, $data[0] must be an INT, $data[1] must match this regex: \(.+\) */
 		if (is_int($data[0]) && preg_match('\(.+\)', $data[1]))
 		{
 			/* Make a quick query to see if theres data already saved */
-			$query->params(
+			$query->params(array(
 				'rows' => '*',
-			);
+			));
 			$query->getData(null, false);
 			$result = $query->dataResult();
 
@@ -218,21 +221,21 @@ class AddonChat
 
 		$tools = self::tools();
 
-		$insert = self::$tools->enable('menu_position') ? self::$tools->getSetting('menu_position') : 'home';
+		$insert = $tools->enable('menu_position') ? $tools->getSetting('menu_position') : 'home';
 
 		/* Let's add our button next to the user's selection...
 		 * Thanks to SlammedDime (http://mattzuba.com) for the example */
 		$counter = 0;
 		foreach ($menu_buttons as $area => $dummy)
-			if (++$counter && $area == $faqmod_insert)
+			if (++$counter && $area == $insert)
 				break;
 
 		$menu_buttons = array_merge(
 			array_slice($menu_buttons, 0, $counter),
 			array('chat' => array(
-			'title' => self::$tools->get('title_main', 'Text'),
-			'href' => $scripturl . '?action=faq',
-			'show' => allowedTo('faqperview'),
+			'title' => $tools->getText('title_main'),
+			'href' => $scripturl . '?action=chat',
+			'show' => true,
 			'sub_buttons' => array(),
 		)),
 			array_slice($menu_buttons, $counter)
@@ -320,16 +323,16 @@ class AddonChat
 
 		/* Generate the settings */
 		$config_vars = array(
-			array('check', 'enable_general', 'subtext' => $tools->getText('enable_general_sub']),
-			array('text', 'number_id', 'size' => 36, 'subtext' => $tools->getText('number_is_sub']),
-			array('text', 'pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub']),
+			array('check', 'enable_general', 'subtext' => $tools->getText('enable_general_sub')),
+			array('text', 'number_id', 'size' => 36, 'subtext' => $tools->getText('number_is_sub')),
+			array('text', 'pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
 		);
 
 		if ($return_config)
 			return $config_vars;
 
 		/* Set some settings for the page */
-		$context['post_url'] = $scripturl . '?action=admin;area=', self::$name ,';sa=general;save';
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=general;save';
 		$context['page_title'] = $tools->getText('default_menu');
 
 		if (isset($_GET['save']))
@@ -367,7 +370,7 @@ class AddonChat
 			return $config_vars;
 
 		/* Page settings */
-		$context['post_url'] = $scripturl . '?action=admin;area=', self::$name ,';sa=look;save';
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=look;save';
 		$context['page_title'] = $tools->getText('default_menu');
 
 		/* Save */

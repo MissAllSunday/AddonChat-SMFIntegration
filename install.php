@@ -134,6 +134,7 @@
 		);
 
 		$smcFunc['db_create_table']($db_prefix . $table['table_name'], $table['columns'], $table['indexes'], $table['parameters'], $table['if_exists'], $table['error']);
+	}
 
 	function AddonChatCheck()
 	{

@@ -2,12 +2,14 @@
 <!DOCTYPE package-info SYSTEM "http://www.simplemachines.org/xml/package-info">
 <package-info xmlns="http://www.simplemachines.org/xml/package-info" xmlns:smf="http://www.simplemachines.org/">
 	<id>Suki:AddonChat</id>
-	<name>AddonChat</name>
+	<name>AddonChatIntegration</name>
 	<version>1.0</version>
 	<type>modification</type>
 
 	<install>
 	<readme parsebbc="true"></readme>
+		<database>install.php</database>
+		<code>hooks.php</code>
 		<modification>AddonChat.xml</modification>
 		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
 		<require-dir name="Sources" destination="$boarddir">Source files</require-dir>
@@ -15,6 +17,8 @@
 	</install>
 
 	<uninstall>
+		<code>remove.php</code>
+		<database>install.php</database>
 		<modification reverse="true">AddonChat.xml</modification>
 		<remove-file name="$sourcedir/AddonChat.php" />
 		<remove-dir name="$sourcedir/AddonChat" />
