@@ -31,11 +31,11 @@
 		exit('<b>Error:</b> Cannot install - please verify you put this in the same place as SMF\'s index.php.');
 
 	$hooks = array(
-		'integrate_pre_include' => '$sourcedir/PostLimit.php',
-		'integrate_admin_areas' => 'wrapper_post_limit_admin',
-		'integrate_load_permissions' => 'PostLimit::permissions',
-		'integrate_admin_areas' => 'PostLimit::admin',
-		'integrate_profile_areas' => 'PostLimit::profileHook'
+		'integrate_pre_include' => '$sourcedir/AddonChat.php',
+		'integrate_load_permissions' => 'AddonChat::permissions',
+		'integrate_menu_buttons' => 'AddonChat::menu',
+		'integrate_actions' => 'AddonChat::actions',
+		'integrate_admin_areas' => 'AddonChat::admin',
 	);
 
 		$call = 'remove_integration_function';

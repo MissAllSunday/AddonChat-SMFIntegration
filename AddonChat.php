@@ -180,7 +180,7 @@ class AddonChat
 			);
 		}
 
-		/* No? seomthing went wrong then */
+		/* No? something went wrong then */
 
 		/* Return the data */
 		return $data;
