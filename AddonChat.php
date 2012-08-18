@@ -186,6 +186,19 @@ class AddonChat
 		return $data;
 	}
 
+	public static function main()
+	{
+		global $context, $scripturl;
+
+		$context['page_title'] =  self::$tools->getText('title_main');
+		$context['linktree'][] = array(
+			'url' => $scripturl . '?action=chat',
+			'name' => self::$tools->getText('title_main')
+		);
+		$context['canonical_url'] = $scripturl . '?action=chat';
+		$context['sub_template'] = 'addonChat_main';
+	}
+
 	/* Action hook */
 	public static function actions(&$actions)
 	{
