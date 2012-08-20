@@ -40,8 +40,8 @@ class AddonChat
 	protected $_user;
 	protected $_data = array();
 	protected $_rows = array();
-	static protected $_dbTableName = 'addonchat';
-	static public $name = 'AddonChat';
+	protected static $_dbTableName = 'addonchat';
+	public static $name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
 	public function __construct()
@@ -52,7 +52,7 @@ class AddonChat
 	{
 		global $sourcedir;
 
-		require_once($sourcedir .'/'. AddonChat::$name .'/AddonChatDB.php');
+		require_once($sourcedir .'/'. self::$name .'/AddonChatDB.php');
 		return new AddonChatDB(self::$_dbTableName);
 	}
 
@@ -60,7 +60,7 @@ class AddonChat
 	{
 		global $sourcedir;
 
-		require_once($sourcedir .'/'. AddonChat::$name .'/AddonChatTools.php');
+		require_once($sourcedir .'/'. self::$name .'/AddonChatTools.php');
 		return AddonChatTools::getInstance();
 	}
 
@@ -86,8 +86,11 @@ class AddonChat
 		/* Requires a function in a source file far far away... */
 		require_once($sourcedir .'/Subs-Package.php');
 
+		/* Lets md5 the pass */
+		$pass = md5($tools->getSetting('pass'));
+
 		/* Build the url */
-		$url = self::$serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw= '. urlencode($tools->getSetting('pass'));
+		$url = $this->serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw='. $pass;
 
 		/* Attempts to fetch data from a URL, regardless of PHP's allow_url_fopen setting */
 		$data = fetch_web_data($url);
@@ -97,7 +100,7 @@ class AddonChat
 			fatal_lang_error(self::$name .'_error_fetching_server', false);
 
 		/* We got something */
-		$data = explode('\n', $data);
+		$data = explode(PHP_EOL, $data);
 
 		/* Cleaning */
 		foreach ($data as $key => $value)
@@ -106,10 +109,10 @@ class AddonChat
 
 		/* The server says no */
 		if ($data[0] == '-1')
-			fatal_lang_error(self::$name .'_error_from_server', false, $data[2]);
+			fatal_lang_error(self::$name .'_error_from_server', false, array($data[2]));
 
-		/* Make sure the data is what is supposed to be, $data[0] must be an INT, $data[1] must match this regex: \(.+\) */
-		if (is_int($data[0]) && preg_match('\(.+\)', $data[1]))
+		/* Make sure the data is what is supposed to be, $data[1] must match this regex: /\((.+)\)/ */
+		if (preg_match('/\((.+)\)/', $data[1]))
 		{
 			/* Make a quick query to see if theres data already saved */
 			$query->params(array(
@@ -316,7 +319,7 @@ class AddonChat
 		$config_vars = array(
 			array('check', self::$name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
 			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
-			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+			array('password', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
 
 			/* Ugly, I know */
 			'',
@@ -340,6 +343,7 @@ class AddonChat
 		{
 			/* Save the settings */
 			checkSession();
+
 			saveDBSettings($config_vars);
 			redirectexit('action=admin;area=AddonChat');
 		}
