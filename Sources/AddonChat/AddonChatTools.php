@@ -83,9 +83,6 @@ class AddonChatTools
 	{
 		/* Set the pattern property with $_name's value */
 		$this->_pattern = '/'. $this->_name .'_/';
-
-		/* Extract the requested values from the arrays */
-		$this->extract();
 	}
 
 	/**
@@ -103,33 +100,18 @@ class AddonChatTools
 	}
 
 	/**
-	 * Extracts the requested values form the $modSettings and txt arrays, sets $_text and $_settings with the founded data.
+	 * Resets the unique instance for the class.
 	 *
-	 * @global array $modSettings SMF's modSettings variable
-	 * @global array $txt SMF's text strings
 	 * @access public
 	 * @return void
 	 */
-	public function extract()
+	public static function reset()
 	{
-		global $modSettings, $txt;
-
-		/* Load the mod's language file */
-		loadLanguage($this->_name);
-
-		/* Get only the settings that we need */
-		foreach ($modSettings as $km => $vm)
-			if (preg_match($this->_pattern, $km))
-				$this->_settings[str_replace($this->_name .'_', '', $km)] = $vm;
-
-		/* Do the same for the text */
-		foreach ($txt as $kt => $vt)
-			if (preg_match($this->_pattern, $kt))
-				$this->_text[str_replace($this->_name .'_', '', $kt)] = $vt;
+		self::$_instance = NULL;
 	}
 
 	/**
-	 * Return true if the param value do exists on the $_settings array, false otherwise.
+	 * Return true if the param value do exists on the $modSettings array, false otherwise.
 	 *
 	 * @param string the name of the key
 	 * @access public
@@ -137,7 +119,9 @@ class AddonChatTools
 	 */
 	public function enable($var)
 	{
-		if (!empty($this->_settings[$var]))
+		global $modSettings;
+
+		if (!empty($modSettings[$this->_name .'_'. $var]))
 			return true;
 
 		else
@@ -153,11 +137,13 @@ class AddonChatTools
 	 */
 	public function getSetting($var)
 	{
+		global $modSettings;
+
 		if (empty($var))
 			return false;
 
-		elseif (!empty($this->_settings[$var]))
-			return $this->_settings[$var];
+		elseif (!empty($modSettings[$this->_name .'_'. $var]))
+			return $modSettings[$this->_name .'_'. $var];
 
 		else
 			return false;
@@ -172,10 +158,15 @@ class AddonChatTools
 	 */
 	public function getText($var)
 	{
-		if (!empty($this->_text[$var]))
-			return $this->_text[$var];
+		global $txt;
+
+		/* Load the mod's language file */
+		loadLanguage($this->_name);
+
+		if (!empty($txt[$this->_name .'_'. $var]))
+			return $txt[$this->_name .'_'. $var];
 
 		else
-			return false;
+			return 'lol';
 	}
 }
