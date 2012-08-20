@@ -83,6 +83,9 @@ class AddonChatTools
 	{
 		/* Set the pattern property with $_name's value */
 		$this->_pattern = '/'. $this->_name .'_/';
+
+		$this->gSetting = array();
+
 	}
 
 	/**
@@ -108,6 +111,52 @@ class AddonChatTools
 	public static function reset()
 	{
 		self::$_instance = NULL;
+	}
+
+	/**
+	 * Performs a query to get the data from the addonchat table.
+	 *
+	 * @access public
+	 * @return mixed
+	 */
+	public function extract()
+	{
+		$query = AddonChat::query();
+
+		/* This won't be updated that frecuently */
+		if (($this->gSetting = cache_get_data(AddonChat::$name .':gSettings', 600)) == null)
+		{
+			$query->params(array(
+				'rows' => '*',
+			));
+
+			$query->getData(null, true);
+			$this->gSetting = $query->dataResult();
+
+			/* Cache this beauty */
+			cache_put_data(AddonChat::$name .':gSettings', $this->gSetting, 600);
+		}
+
+		return $this->gSetting;
+	}
+
+	/**
+	 * Return the value from the global settings table.
+	 *
+	 * @param string the name of the key
+	 * @access public
+	 * @return bool
+	 */
+	public function globalSetting($var)
+	{
+		/* Get the global Settings */
+		$this->extract();
+
+		if (!empty($this->gSetting[$var]))
+			return $this->gSetting[$var];
+
+		else
+			return false;
 	}
 
 	/**

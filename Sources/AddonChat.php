@@ -65,6 +65,23 @@ class AddonChat
 	}
 
 	/*
+	 * Cleans the old cache value
+	 *
+	 * Replace the existing cache data with a null value so SMF generates a new cache...
+	 * @access public
+	 * @param mixed $type the name of value(s) to be deleted
+	 * @return void
+	 */
+	public function killCache($type)
+	{
+		if (!is_array($type))
+			$type = array($type);
+
+		foreach ($type as $t)
+			cache_put_data(self::$name .':'. $t, '');
+	}
+	
+	/*
 	 * Calls the external server to retrieve the server number and client ID
 	 *
 	 * This will be done just 1 time, the function will store the values on the DB
