@@ -35,10 +35,10 @@ $txt['AddonChat_admin_panel_descs'] = 'From here you can configure your AddonCha
 $txt['AddonChat_enable_general'] = 'Enable the addonChat integration';
 $txt['AddonChat_enable_general_sub'] = 'This is the master setting, needs to be on for the mod to work properly.';
 $txt['AddonChat_number_id'] = 'Your number ID';
-$txt['AddonChat_number_id_sub'] = 'Numeric portion of AddonChat account number.';
+$txt['AddonChat_number_id_sub'] = 'Numeric portion of AddonChat account number. Should be something like: SC-000, take away the SC- part and just use the numbers.';
 $txt['AddonChat_pass'] = 'Your addonChat password';
-$txt['AddonChat_pass_sub'] = 'The integration script needs your password to connect with the chat server. Should be something like: SC-000, take away the SC- part and just use the numbers.';
-$txt['AddonChat_'] = '';
+$txt['AddonChat_pass_sub'] = 'The integration script needs your password to connect with the chat server.';
+$txt['AddonChat_server_call'] = 'After you have saved your ID and password, please click on the link below to connect your forum with the chat server, if the settings introduced are good and the server responds OK, you will see a green message saying it\'s complete.<br /> You only need to do this once, after this, the settings will be stored on the DB.<br /><a href="'. $scripturl . '?action=admin;area='. AddonChat::$name .';sa=general;server">test</a>';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';

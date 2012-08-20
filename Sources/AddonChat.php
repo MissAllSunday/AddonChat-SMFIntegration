@@ -35,20 +35,6 @@ if (!defined('SMF'))
  */
 function AddonChat_SubActions_Wrapper(){AddonChat::subActions();};
 
-/* Autoload */
-function __autoload($class_name)
-{
-	global $sourcedir;
-
-	$file_path = $sourcedir .'/'. AddonChat::$name .'/'. $class_name .'.php';
-
-	if(file_exists($file_path))
-		require_once($file_path);
-
-	else
-		return false;
-}
-
 class AddonChat
 {
 	protected $_user;
@@ -58,7 +44,7 @@ class AddonChat
 	static public $name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
-	public function __construct($user)
+	public function __construct()
 	{
 	}
 
@@ -66,12 +52,15 @@ class AddonChat
 	{
 		global $sourcedir;
 
-		require_once($sourcedir . AddonChat::$name .'/'. $class_name . '.php');
+		require_once($sourcedir .'/'. AddonChat::$name .'/AddonChatDB.php');
 		return new AddonChatDB(self::$_dbTableName);
 	}
 
 	protected static function tools()
 	{
+		global $sourcedir;
+
+		require_once($sourcedir .'/'. AddonChat::$name .'/AddonChatTools.php');
 		return AddonChatTools::getInstance();
 	}
 
@@ -326,8 +315,12 @@ class AddonChat
 		/* Generate the settings */
 		$config_vars = array(
 			array('check', self::$name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
-			array('text', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_is_sub')),
+			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
 			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+
+			/* Ugly, I know */
+			'',
+			$tools->getText('server_call'),
 		);
 
 		if ($return_config)
@@ -337,12 +330,18 @@ class AddonChat
 		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=general;save';
 		$context['page_title'] = $tools->getText('default_menu');
 
+		if (isset($_GET['server']))
+		{
+			$connect = new self();
+			$connect->getAccount();
+		}
+
 		if (isset($_GET['save']))
 		{
 			/* Save the settings */
 			checkSession();
 			saveDBSettings($config_vars);
-			redirectexit('action=admin;area=', self::$name ,';sa=general');
+			redirectexit('action=admin;area=AddonChat');
 		}
 
 		prepareDBSettingContext($config_vars);
