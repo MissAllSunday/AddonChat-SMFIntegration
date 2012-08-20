@@ -74,6 +74,12 @@ class AddonChatTools
 	protected $_pattern;
 
 	/**
+	 * @var string The name of the DB table
+	 * @access protected
+	 */
+	protected static $_dbTableName = 'addonchat';
+
+	/**
 	 * Initialize the extract() method and sets the pattern property using $_name's value.
 	 *
 	 * @access protected
@@ -114,6 +120,20 @@ class AddonChatTools
 	}
 
 	/**
+	 * Creates a new DB object.
+	 *
+	 * @access protected
+	 * @return object
+	 */
+	protected static function query()
+	{
+		global $sourcedir;
+
+		require_once($sourcedir .'/'. AddonChat::$name .'/AddonChatDB.php');
+		return new AddonChatDB(self::$_dbTableName);
+	}
+
+	/**
 	 * Performs a query to get the data from the addonchat table.
 	 *
 	 * @access public
@@ -121,7 +141,7 @@ class AddonChatTools
 	 */
 	public function extract()
 	{
-		$query = AddonChat::query();
+		$query = self::query();
 
 		/* This won't be updated that frecuently */
 		if (($this->gSetting = cache_get_data(AddonChat::$name .':gSettings', 600)) == null)
@@ -145,7 +165,7 @@ class AddonChatTools
 	 *
 	 * @param string the name of the key
 	 * @access public
-	 * @return bool
+	 * @return mixed
 	 */
 	public function globalSetting($var)
 	{

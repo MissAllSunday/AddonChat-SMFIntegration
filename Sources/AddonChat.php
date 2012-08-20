@@ -40,20 +40,11 @@ class AddonChat
 	protected $_user;
 	protected $_data = array();
 	protected $_rows = array();
-	protected static $_dbTableName = 'addonchat';
 	public static $name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
 	public function __construct()
 	{
-	}
-
-	protected static function query()
-	{
-		global $sourcedir;
-
-		require_once($sourcedir .'/'. self::$name .'/AddonChatDB.php');
-		return new AddonChatDB(self::$_dbTableName);
 	}
 
 	protected static function tools()
@@ -93,8 +84,8 @@ class AddonChat
 		global $sourcedir;
 
 		/* Set what we need */
-		$query = self::query();
 		$tools = self::tools();
+		$query = $tools->query();
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
