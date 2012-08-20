@@ -327,7 +327,7 @@ class AddonChat
 		$config_vars = array(
 			array('check', self::$name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
 			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
-			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+			array('password', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
 
 			/* Ugly, I know */
 			'',
