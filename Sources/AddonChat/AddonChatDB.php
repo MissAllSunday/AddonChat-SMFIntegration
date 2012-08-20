@@ -25,8 +25,8 @@
  *
  */
 
-if (!class_exists('AddonChat')):
-class AddonChat
+if (!class_exists('AddonChatDB')):
+class AddonChatDB
 {
 	protected $_table;
 	protected $_dataResult = array();
