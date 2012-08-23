@@ -40,20 +40,11 @@ class AddonChat
 	protected $_user;
 	protected $_data = array();
 	protected $_rows = array();
-	protected static $_dbTableName = 'addonchat';
 	public static $name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
 	public function __construct()
 	{
-	}
-
-	protected static function query()
-	{
-		global $sourcedir;
-
-		require_once($sourcedir .'/'. self::$name .'/AddonChatDB.php');
-		return new AddonChatDB(self::$_dbTableName);
 	}
 
 	protected static function tools()
@@ -62,6 +53,23 @@ class AddonChat
 
 		require_once($sourcedir .'/'. self::$name .'/AddonChatTools.php');
 		return AddonChatTools::getInstance();
+	}
+
+	/*
+	 * Cleans the old cache value
+	 *
+	 * Replace the existing cache data with a null value so SMF generates a new cache...
+	 * @access public
+	 * @param mixed $type the name of value(s) to be deleted
+	 * @return void
+	 */
+	public function killCache($type)
+	{
+		if (!is_array($type))
+			$type = array($type);
+
+		foreach ($type as $t)
+			cache_put_data(self::$name .':'. $t, '');
 	}
 
 	/*
@@ -76,8 +84,8 @@ class AddonChat
 		global $sourcedir;
 
 		/* Set what we need */
-		$query = self::query();
 		$tools = self::tools();
+		$query = $tools->query();
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
@@ -174,11 +182,6 @@ class AddonChat
 				)
 			);
 		}
-
-		/* No? something went wrong then */
-
-		/* Return the data */
-		return $data;
 	}
 
 	public static function main()
@@ -319,7 +322,7 @@ class AddonChat
 		$config_vars = array(
 			array('check', self::$name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
 			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
-			array('password', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
 
 			/* Ugly, I know */
 			'',
@@ -337,6 +340,8 @@ class AddonChat
 		{
 			$connect = new self();
 			$connect->getAccount();
+
+			redirectexit('action=admin;area=AddonChat');
 		}
 
 		if (isset($_GET['save']))

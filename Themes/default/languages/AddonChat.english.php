@@ -31,7 +31,7 @@ $txt['AddonChat_title_main'] = 'Chat';
 $txt['AddonChat_default_menu'] = 'Chat Integration';
 $txt['AddonChat_general_settings'] = 'Settings';
 $txt['AddonChat_look_settings'] = 'Look settings';
-$txt['AddonChat_admin_panel_desc'] = 'From here you can configure your AddonChat integration.<br />After you have saved your ID and password, please click on the link below to connect your forum with the chat server, if the settings introduced are good and the server responds OK, you will see a green message saying it\'s complete.<br /> You only need to do this once, after this, the settings will be stored on the DB.<br />';
+$txt['AddonChat_admin_panel_desc'] = 'From here you can configure your AddonChat integration.<br />After you have saved your ID and password, please click on the link below to connect your forum with the chat server<br /> You only need to do this once, after this, the settings will be stored on the DB.<br />';
 $txt['AddonChat_enable_general'] = 'Enable the addonChat integration';
 $txt['AddonChat_enable_general_sub'] = 'This is the master setting, needs to be on for the mod to work properly.';
 $txt['AddonChat_number_id'] = 'Your number ID';
@@ -42,6 +42,17 @@ $txt['AddonChat_server_call'] = '<a href="'. $scripturl . '?action=admin;area='.
 $txt['AddonChat_no_pass_set'] = 'You need to introduce your number ID and password first, please go back and fill out the required fields and try again.';
 $txt['AddonChat_error_from_server'] = 'There is an error comming from the server, the error is: %s';
 $txt['AddonChat_error_fetching_server'] = 'The server isn\'t responding, please try again later';
+$txt['AddonChat_server_OK'] = 'The settings were saved succesfully';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
+$txt['AddonChat_'] = '';
 
 
 // Who's online strings
