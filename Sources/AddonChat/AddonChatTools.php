@@ -119,6 +119,23 @@ class AddonChatTools
 		self::$_instance = NULL;
 	}
 
+	/*
+	 * Cleans the old cache value
+	 *
+	 * Replace the existing cache data with a null value so SMF generates a new cache...
+	 * @access public
+	 * @param mixed $type the name of value(s) to be deleted
+	 * @return void
+	 */
+	public function killCache($type)
+	{
+		if (!is_array($type))
+			$type = array($type);
+
+		foreach ($type as $t)
+			cache_put_data(self::$name .':'. $t, '');
+	}
+
 	/**
 	 * Creates a new DB object.
 	 *

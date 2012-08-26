@@ -56,23 +56,6 @@ class AddonChat
 	}
 
 	/*
-	 * Cleans the old cache value
-	 *
-	 * Replace the existing cache data with a null value so SMF generates a new cache...
-	 * @access public
-	 * @param mixed $type the name of value(s) to be deleted
-	 * @return void
-	 */
-	public function killCache($type)
-	{
-		if (!is_array($type))
-			$type = array($type);
-
-		foreach ($type as $t)
-			cache_put_data(self::$name .':'. $t, '');
-	}
-
-	/*
 	 * Calls the external server to retrieve the server number and client ID
 	 *
 	 * This will be done just 1 time, the function will store the values on the DB
@@ -133,7 +116,7 @@ class AddonChat
 			if (!empty($result))
 			{
 				/* Update the cache */
-				$this->killCache();
+				$tools->killCache();
 
 				$query->params(
 					array(
@@ -188,10 +171,14 @@ class AddonChat
 	{
 		global $context, $scripturl;
 
-		$context['page_title'] =  self::$tools->getText('title_main');
+		$tools = self::tools();
+
+		loadTemplate(self::$name);
+
+		$context['page_title'] =  $tools->getText('title_main');
 		$context['linktree'][] = array(
 			'url' => $scripturl . '?action=chat',
-			'name' => self::$tools->getText('title_main')
+			'name' => $tools->getText('title_main')
 		);
 		$context['canonical_url'] = $scripturl . '?action=chat';
 		$context['sub_template'] = 'addonChat_main';
