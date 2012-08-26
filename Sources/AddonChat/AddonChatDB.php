@@ -38,7 +38,7 @@ class AddonChatDB
 		$this->_table = isset($table) ? '{db_prefix}'.$table : null;
 	}
 
-	function params($params, $data = null, $values = null)
+	function params($params = array())
 	{
 		if(is_null($params))
 			return false;
@@ -51,6 +51,20 @@ class AddonChatDB
 		$this->_order = isset($params['order']) ? 'ORDER BY '.trim($params['order']) : null;
 		$this->_set = isset($params['set']) ? 'SET '.trim($params['set']) : null;
 		$this->_data = !is_array($data) ? array($data) : $data;
+	}
+
+	public function data($data = array())
+	{
+		if(is_null($data))
+			return false;
+
+		$this->_data = !is_array($data) ? array($data) : $data;
+	}
+
+	public function values($values = array())
+	{
+		if(is_null($values))
+			return false;
 	}
 
 	function getData($key = null, $single = false)
