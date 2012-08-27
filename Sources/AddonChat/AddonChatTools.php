@@ -131,20 +131,6 @@ class AddonChatTools
 	}
 
 	/**
-	 * Creates a new DB object.
-	 *
-	 * @access protected
-	 * @return object
-	 */
-	protected static function query()
-	{
-		global $sourcedir;
-
-		require_once($sourcedir .'/'. AddonChat::$name .'/AddonChatDB.php');
-		return new AddonChatDB(self::$_dbTableName);
-	}
-
-	/**
 	 * Performs a query to get the data from the addonchat table.
 	 *
 	 * @access public
@@ -157,12 +143,14 @@ class AddonChatTools
 		/* This won't be updated that frecuently */
 		if (($this->gSetting = cache_get_data(AddonChat::$name .':gSettings', 600)) == null)
 		{
-			$query->params(array(
-				'rows' => '*',
-			));
+			$query = $smcFunc['db_query']('', '
+				SELECT *
+				FROM {db_prefix}'. AddonChat::$_dbTableName,
+				array()
+			);
 
-			$query->getData(null, true);
-			$this->gSetting = $query->dataResult();
+			while($row = $smcFunc['db_fetch_assoc']($query))
+				$this->gSetting = $row;
 
 			/* Cache this beauty */
 			cache_put_data(AddonChat::$name .':gSettings', $this->gSetting, 600);

@@ -163,7 +163,7 @@ class AddonChat
 			{
 				/* Update the cache */
 				$tools->killCache();
-				
+
 				$query = $smcFunc['db_query']('', '
 					UPDATE {db_prefix}'. self::$_dbTableName .'
 					SET edition_code = {int:read}, modules = {string:modules}, remote_auth_capable = {int:remote_auth_capable}, full_service = {string:full_service}, expiration_date = {string:expiration_date}, remote_auth_enable = {int.remote_auth_enable}, remote_auth_url = {string:remote_auth_url}, server_name = {string:server_name}, tcp_port = {string:tcp_port}, control_panel_login = {strong:control_panel_login}, chat_title = {string:chat_title}, product_code = {string:product_code}, customer_code = {string:customer_code}',
@@ -187,7 +187,8 @@ class AddonChat
 
 			/* No data, create the rows */
 			else
-				$query->insertData(
+				$smcFunc['db_insert']('replace',
+					'{db_prefix}'. self::$_dbTableName,
 				array(
 						'edition_code' => 'int',
 						'modules' => 'string',
@@ -207,7 +208,7 @@ class AddonChat
 				array(
 					'customer_code',
 				)
-			);
+				);
 		}
 	}
 
