@@ -69,17 +69,7 @@ class AddonChat
 	 */
 	public static function ras()
 	{
-		global $context, $user_info;
-
-		/* Load the template file */
-		loadTemplate(self::$name);
-
-		/* Set the template */
-		$context['template_layers'] = array();
-		$context['sub_template'] = 'addonChat_ras';
-
-		/* The external server needs a plain text file... */
-		header("Content-type: text/plain");
+		global $user_info;
 
 		/* We need both username and password */
 		if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']))
@@ -87,14 +77,14 @@ class AddonChat
 
 		/* Do something here... */
 		else
-		{
-			$context[self::$name]['ras'] = 'user.uid  = '. $user_info['id'] . PHP_EOL .'
-				user.usergroup.can_login  = true '. PHP_EOL .'
-				user.usergroup.icon = 0'. PHP_EOL .'
-				user.usergroup.can_msg = true'. PHP_EOL .'
-				user.usergroup.idle_kick = true'. PHP_EOL .'
-			';
-		}
+			$context[self::$name]['ras'] = 'user.uid  = '. $user_info['id'] . PHP_EOL .'user.usergroup.can_login  = true '. PHP_EOL .'user.usergroup.icon = 0'. PHP_EOL .'user.usergroup.can_msg = true'. PHP_EOL .'user.usergroup.idle_kick = true'. PHP_EOL .'';
+
+		/* The external server needs a plain text file... */
+		header("Content-type: text/plain");
+
+		/* Print it */
+		print $context[Addonchat::$name]['ras'];
+		obExit(false);
 	}
 
 	/*
