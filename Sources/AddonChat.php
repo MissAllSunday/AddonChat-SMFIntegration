@@ -228,7 +228,7 @@ class AddonChat
 	public static function actions(&$actions)
 	{
 		$actions['chat'] = array(self::$name .'.php', self::$name .'::main');
-		$actions['chatras'] = array(self::$name .'.php', self::$name .'::ras');
+		$actions['chatauth'] = array(self::$name .'.php', self::$name .'::ras');
 	}
 
 	/* Permissions hook */
