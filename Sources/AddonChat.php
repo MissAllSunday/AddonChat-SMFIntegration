@@ -43,6 +43,12 @@ class AddonChat
 	public static $name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
+	/**
+	 * @var string The name of the DB table
+	 * @access protected
+	 */
+	protected static $_dbTableName = 'addonchat';
+
 	public function __construct()
 	{
 	}
@@ -61,7 +67,7 @@ class AddonChat
 	 * @access public
 	 * @return mixed
 	 */
-	public function ras()
+	public static function ras()
 	{
 		global $context, $user_info;
 
@@ -100,11 +106,10 @@ class AddonChat
 	 */
 	public function getAccount()
 	{
-		global $sourcedir;
+		global $sourcedir, $smcFunc;
 
 		/* Set what we need */
 		$tools = self::tools();
-		$query = $tools->query();
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
@@ -142,22 +147,26 @@ class AddonChat
 		if (preg_match('/\((.+)\)/', $data[1]))
 		{
 			/* Make a quick query to see if theres data already saved */
-			$query->params(array(
-				'rows' => '*',
-			));
-			$query->getData(null, false);
-			$result = $query->dataResult();
+			$query = $smcFunc['db_query']('', '
+				SELECT customer_code
+				FROM {db_prefix}'. self::$_dbTableName .'',
+				array()
+			);
+
+			while($row = $smcFunc['db_fetch_assoc']($query))
+				$result = $row;
+
+		$smcFunc['db_free_result']($query);
 
 			/* There is, so make an update */
 			if (!empty($result))
 			{
 				/* Update the cache */
 				$tools->killCache();
-
-				$query->params(
-					array(
-						'set' => 'read = {int:read}',
-					),
+				
+				$query = $smcFunc['db_query']('', '
+					UPDATE {db_prefix}'. self::$_dbTableName .'
+					SET edition_code = {int:read}, modules = {string:modules}, remote_auth_capable = {int:remote_auth_capable}, full_service = {string:full_service}, expiration_date = {string:expiration_date}, remote_auth_enable = {int.remote_auth_enable}, remote_auth_url = {string:remote_auth_url}, server_name = {string:server_name}, tcp_port = {string:tcp_port}, control_panel_login = {strong:control_panel_login}, chat_title = {string:chat_title}, product_code = {string:product_code}, customer_code = {string:customer_code}',
 					array(
 						'edition_code' => $data[0],
 						'modules' => $data[1],
@@ -174,7 +183,6 @@ class AddonChat
 						'customer_code' => $data[12],
 					)
 				);
-				$query->updateData();
 			}
 
 			/* No data, create the rows */

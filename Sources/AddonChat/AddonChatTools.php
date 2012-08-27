@@ -74,12 +74,6 @@ class AddonChatTools
 	protected $_pattern;
 
 	/**
-	 * @var string The name of the DB table
-	 * @access protected
-	 */
-	protected static $_dbTableName = 'addonchat';
-
-	/**
 	 * Initialize the extract() method and sets the pattern property using $_name's value.
 	 *
 	 * @access protected
