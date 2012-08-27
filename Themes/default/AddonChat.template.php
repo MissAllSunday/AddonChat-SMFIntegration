@@ -43,12 +43,44 @@
 			<div class="roundframe rfix">
 				<div class="innerframe">
 					<div class="content">
-						main info ehre
+						<script type="text/javascript">/*<![CDATA[*/
+							var addonchat = {
+								signed:true,
+								server:1,
+								id:', $context[AddonChat::$name]['tools']->getSetting('number_id') ,',
+								width:"625",
+								height:"380",
+								language:"en"
+							}
+							var addonchat_param = {
+								username: "John",
+								password: "12345",
+								autologin: true,
+								mycolor: "#000000",
+								myfont: "Verdana-PLAIN-13",
+								url_exit_enable: true,
+								url_exit: "http://www.addonchat.com"
+							}
+							 /* ]]> */</script>
+							 <script type="text/javascript"
+								src="http://client1.addonchat.com/chat.js"></script>
+							 <noscript>
+								To enter this chat room, please enable JavaScript in your web
+								browser. This <a href="http://www.addonchat.com/">Chat
+								Software</a> requires Java: <a href="http://www.java.com/">Get
+								Java Now</a>
+							</noscript>
 					</div>
 				</div>
 			</div>
 			<span class="lowerframe">
 				<span></span>
 			</span><br />';
+	}
 
+	function template_addonChat_ras()
+	{
+		global $context;
+
+		print $context[Addonchat::$name]['ras'];
 	}

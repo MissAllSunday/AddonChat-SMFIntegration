@@ -56,6 +56,42 @@ class AddonChat
 	}
 
 	/*
+	 * Send data to the external server
+	 *
+	 * @access public
+	 * @return mixed
+	 */
+	public function ras()
+	{
+		global $context, $user_info;
+
+		/* Load the template file */
+		loadTemplate(self::$name);
+
+		/* Set the template */
+		$context['template_layers'] = array();
+		$context['sub_template'] = 'addonChat_ras';
+
+		/* The external server needs a plain text file... */
+		header("Content-type: text/plain");
+
+		/* We need both username and password */
+		if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']))
+			$context[self::$name]['ras'] = '-1'. PHP_EOL;
+
+		/* Do something here... */
+		else
+		{
+			$context[self::$name]['ras'] = 'user.uid  = '. $user_info['id'] . PHP_EOL .'
+				user.usergroup.can_login  = true '. PHP_EOL .'
+				user.usergroup.icon = 0'. PHP_EOL .'
+				user.usergroup.can_msg = true'. PHP_EOL .'
+				user.usergroup.idle_kick = true'. PHP_EOL .'
+			';
+		}
+	}
+
+	/*
 	 * Calls the external server to retrieve the server number and client ID
 	 *
 	 * This will be done just 1 time, the function will store the values on the DB
@@ -183,12 +219,17 @@ class AddonChat
 		$context['canonical_url'] = $scripturl . '?action=chat';
 		$context['sub_template'] = 'addonChat_main';
 		$context['robot_no_index'] = true;
+
+		/* Get all the global settings */
+		$context[self::$name]['global_settings'] = $tools->globalSettingAll();
+		$context[self::$name]['tools'] = $tools;
 	}
 
 	/* Action hook */
 	public static function actions(&$actions)
 	{
 		$actions['chat'] = array(self::$name .'.php', self::$name .'::main');
+		$actions['chatras'] = array(self::$name .'.php', self::$name .'::ras');
 	}
 
 	/* Permissions hook */

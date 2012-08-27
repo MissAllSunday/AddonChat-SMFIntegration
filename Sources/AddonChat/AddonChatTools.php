@@ -173,8 +173,24 @@ class AddonChatTools
 			/* Cache this beauty */
 			cache_put_data(AddonChat::$name .':gSettings', $this->gSetting, 600);
 		}
+	}
 
-		return $this->gSetting;
+	/**
+	 * Return all the values from the global settings table.
+	 *
+	 * @access public
+	 * @return mixed can be either an array of values or a boolean false
+	 */
+	public function globalSettingAll()
+	{
+		/* Get the global Settings */
+		$this->extract();
+
+		if (!empty($this->gSetting))
+			return $this->gSetting;
+
+		else
+			return false;
 	}
 
 	/**
