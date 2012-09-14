@@ -41,6 +41,10 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	$_REQUEST['username'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['username']));
 	$_REQUEST['password'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['password']));
 
+	/* Check if this is the right user */
+	if ($user_info['passwd'] != $_REQUEST['password'] || $user_info['username'] != $_REQUEST['username'])
+		die('-1'. PHP_EOL);
+
 	/* There will be a lot of checks here */
 
 	/* Print it */

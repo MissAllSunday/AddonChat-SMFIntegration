@@ -27,7 +27,7 @@
 
 	function template_addonChat_main()
 	{
-		global $context, $scripturl, $modSettings;
+		global $context, $scripturl, $modSettings, $user_info;
 
 		echo '
 			<div class="cat_bar">
@@ -53,8 +53,8 @@
 								language:"en"
 							}
 							var addonchat_param = {
-								username: "John",
-								password: "12345",
+								username: '. $user_info['username'] .',
+								password: '. $user_info['passwd'] .',
 								autologin: true,
 								mycolor: "#000000",
 								myfont: "Verdana-PLAIN-13",
