@@ -28,18 +28,31 @@
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
-	global $user_info;
+	global $user_info, $context;
+
+	/* Set the var */
+	$context['chat_ras'] = '';
 
 	/* We need both username and password */
 	if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']))
-		$context[self::$name]['ras'] = '-1'. PHP_EOL;
+		$context['chat_ras'] = '-1'. PHP_EOL;
 
-	/* Do something here... */
-	else
-		$context[self::$name]['ras'] = 'user.uid  = '. $user_info['id'] . PHP_EOL .'user.usergroup.can_login  = true '. PHP_EOL .'user.usergroup.icon = 0'. PHP_EOL .'user.usergroup.can_msg = true'. PHP_EOL .'user.usergroup.idle_kick = true'. PHP_EOL .'';
+	/* They got to have something... */
+	if (empty($_REQUEST['username']) || empty($_REQUEST['password']))
+		$context['chat_ras'] = '-1'. PHP_EOL;
+
+	/* Cleaning */
+	$_REQUEST['username'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['username']));
+	$_REQUEST['password'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['password']));
 
 	/* The external server needs a plain text file... */
 	header("Content-type: text/plain");
 
 	/* Print it */
-	print $context[Addonchat::$name]['ras'];
+	print 'scras.version = 2.1'. PHP_EOL;
+	print 'user.usergroup.id = 0'. PHP_EOL;
+	print 'user.uid  = '. $user_info['id'] . PHP_EOL;
+	print 'user.usergroup.can_login  = true'. PHP_EOL;
+	print 'user.usergroup.icon = 0'. PHP_EOL;
+	print 'user.usergroup.can_msg = true'. PHP_EOL;
+	print 'user.usergroup.idle_kick = true'. PHP_EOL;
