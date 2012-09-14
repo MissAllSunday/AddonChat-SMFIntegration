@@ -47,7 +47,7 @@
 							var addonchat = {
 								signed:true,
 								server:1,
-								id:', $context[AddonChat::$name]['tools']->getSetting('number_id') ,',
+								id:', $context[AddonChat::$_name]['tools']->getSetting('number_id') ,',
 								width:"625",
 								height:"380",
 								language:"en"
@@ -82,5 +82,5 @@
 	{
 		global $context;
 
-		print $context[Addonchat::$name]['ras'];
+		print $context[AddonChat::$_name]['ras'];
 	}

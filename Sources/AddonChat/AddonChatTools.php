@@ -75,6 +75,9 @@ class AddonChatTools
 	 */
 	protected function __construct()
 	{
+		/* Set the name */
+		$this->_name = Addonchat::$_name;
+	
 		/* Set the pattern property with $_name's value */
 		$this->_pattern = '/'. $this->_name .'_/';
 
@@ -115,13 +118,9 @@ class AddonChatTools
 	 * @param mixed $type the name of value(s) to be deleted
 	 * @return void
 	 */
-	public function killCache($type)
+	public function killCache()
 	{
-		if (!is_array($type))
-			$type = array($type);
-
-		foreach ($type as $t)
-			cache_put_data(AddonChat::$_name .':'. $t, '');
+		cache_put_data(AddonChat::$_name .':gSettings', '');
 	}
 
 	/**
@@ -135,7 +134,7 @@ class AddonChatTools
 		$query = self::query();
 
 		/* This won't be updated that frecuently */
-		if (($this->gSetting = cache_get_data(AddonChat::$name .':gSettings', 600)) == null)
+		if (($this->gSetting = cache_get_data(AddonChat::$_name .':gSettings', 600)) == null)
 		{
 			$query = $smcFunc['db_query']('', '
 				SELECT *
@@ -147,7 +146,7 @@ class AddonChatTools
 				$this->gSetting = $row;
 
 			/* Cache this beauty */
-			cache_put_data(AddonChat::$name .':gSettings', $this->gSetting, 600);
+			cache_put_data(AddonChat::$_name .':gSettings', $this->gSetting, 600);
 		}
 	}
 
@@ -243,8 +242,5 @@ class AddonChatTools
 
 		if (!empty($txt[$this->_name .'_'. $var]))
 			return $txt[$this->_name .'_'. $var];
-
-		else
-			return 'lol';
 	}
 }

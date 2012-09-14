@@ -120,7 +120,12 @@ class AddonChat
 			while($row = $smcFunc['db_fetch_assoc']($query))
 				$result = $row;
 
-		$smcFunc['db_free_result']($query);
+			$smcFunc['db_free_result']($query);
+
+			/* The following data will be converted to an int */
+			$data[0] = (int) $data[0];
+			$data[2] = (int) $data[2];
+			$data[5] = (int) $data[5];
 
 			/* There is, so make an update */
 			if (!empty($result))
@@ -130,9 +135,9 @@ class AddonChat
 
 				$query = $smcFunc['db_query']('', '
 					UPDATE {db_prefix}'. self::$_dbTableName .'
-					SET edition_code = {int:read}, modules = {string:modules}, remote_auth_capable = {int:remote_auth_capable}, full_service = {string:full_service}, expiration_date = {string:expiration_date}, remote_auth_enable = {int.remote_auth_enable}, remote_auth_url = {string:remote_auth_url}, server_name = {string:server_name}, tcp_port = {string:tcp_port}, control_panel_login = {strong:control_panel_login}, chat_title = {string:chat_title}, product_code = {string:product_code}, customer_code = {string:customer_code}',
+					SET edition_code = {int:read}, modules = {string:modules}, remote_auth_capable = {int:remote_auth_capable}, full_service = {string:full_service}, expiration_date = {string:expiration_date}, remote_auth_enable = {int:remote_auth_enable}, remote_auth_url = {string:remote_auth_url}, server_name = {string:server_name}, tcp_port = {string:tcp_port}, control_panel_login = {strong:control_panel_login}, chat_title = {string:chat_title}, product_code = {string:product_code}, customer_code = {string:customer_code}',
 					array(
-						'edition_code' => $data[0],
+						'edition_code' =>$data[0],
 						'modules' => $data[1],
 						'remote_auth_capable' => $data[2],
 						'full_service' => $data[3],
