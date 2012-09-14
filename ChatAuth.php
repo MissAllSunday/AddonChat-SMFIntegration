@@ -31,7 +31,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	global $user_info;
 
 	/* The external server needs a plain text file... */
-	header("Content-type: text/plain");
+	header('Content-type: text/plain');
 
 	/* We need both username and password */
 	if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']) || empty($_REQUEST['username']) || empty($_REQUEST['password']))

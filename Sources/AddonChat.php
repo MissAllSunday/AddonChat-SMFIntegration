@@ -40,7 +40,7 @@ class AddonChat
 	protected $_user;
 	protected $_data = array();
 	protected $_rows = array();
-	public static $name = 'AddonChat';
+	public static $_name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
 	/**
@@ -57,7 +57,7 @@ class AddonChat
 	{
 		global $sourcedir;
 
-		require_once($sourcedir .'/'. self::$name .'/AddonChatTools.php');
+		require_once($sourcedir .'/'. self::$_name .'/AddonChatTools.php');
 		return AddonChatTools::getInstance();
 	}
 
@@ -77,7 +77,7 @@ class AddonChat
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
-			fatal_lang_error(self::$name .'_no_pass_set', false);
+			fatal_lang_error(self::$_name .'_no_pass_set', false);
 
 		/* Requires a function in a source file far far away... */
 		require_once($sourcedir .'/Subs-Package.php');
@@ -93,7 +93,7 @@ class AddonChat
 
 		/* Oops, something went wrong, tell the user to try later */
 		if ($data == null)
-			fatal_lang_error(self::$name .'_error_fetching_server', false);
+			fatal_lang_error(self::$_name .'_error_fetching_server', false);
 
 		/* We got something */
 		$data = explode(PHP_EOL, $data);
@@ -105,7 +105,7 @@ class AddonChat
 
 		/* The server says no */
 		if ($data[0] == '-1')
-			fatal_lang_error(self::$name .'_error_from_server', false, array($data[2]));
+			fatal_lang_error(self::$_name .'_error_from_server', false, array($data[2]));
 
 		/* Make sure the data is what is supposed to be, $data[1] must match this regex: /\((.+)\)/ */
 		if (preg_match('/\((.+)\)/', $data[1]))
@@ -182,7 +182,7 @@ class AddonChat
 
 		$tools = self::tools();
 
-		loadTemplate(self::$name);
+		loadTemplate(self::$_name);
 
 		$context['page_title'] =  $tools->getText('title_main');
 		$context['linktree'][] = array(
@@ -194,14 +194,14 @@ class AddonChat
 		$context['robot_no_index'] = true;
 
 		/* Get all the global settings */
-		$context[self::$name]['global_settings'] = $tools->globalSettingAll();
-		$context[self::$name]['tools'] = $tools;
+		$context[self::$_name]['global_settings'] = $tools->globalSettingAll();
+		$context[self::$_name]['tools'] = $tools;
 	}
 
 	/* Action hook */
 	public static function actions(&$actions)
 	{
-		$actions['chat'] = array(self::$name .'.php', self::$name .'::main');
+		$actions['chat'] = array(self::$_name .'.php', self::$_name .'::main');
 	}
 
 	/* Permissions hook */
@@ -249,9 +249,9 @@ class AddonChat
 	{
 		$tools = self::tools();
 
-		$admin_areas['config']['areas'][self::$name] = array(
+		$admin_areas['config']['areas'][self::$_name] = array(
 					'label' => $tools->getText('default_menu'),
-					'file' => self::$name .'.php',
+					'file' => self::$_name .'.php',
 					'function' => 'AddonChat_SubActions_Wrapper',
 					'icon' => 'posts.gif',
 					'subsections' => array(
@@ -320,9 +320,9 @@ class AddonChat
 
 		/* Generate the settings */
 		$config_vars = array(
-			array('check', self::$name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
-			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
-			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+			array('check', self::$_name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
+			array('int', self::$_name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
+			array('text', self::$_name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
 
 			/* Ugly, I know */
 			'',
@@ -333,7 +333,7 @@ class AddonChat
 			return $config_vars;
 
 		/* Set some settings for the page */
-		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=general;save';
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$_name .';sa=general;save';
 		$context['page_title'] = $tools->getText('default_menu');
 
 		if (isset($_GET['server']))
@@ -380,7 +380,7 @@ class AddonChat
 			return $config_vars;
 
 		/* Page settings */
-		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=look;save';
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$_name .';sa=look;save';
 		$context['page_title'] = $tools->getText('default_menu');
 
 		/* Save */
@@ -388,7 +388,7 @@ class AddonChat
 		{
 			checkSession();
 			saveDBSettings($config_vars);
-			redirectexit('action=admin;area=', self::$name ,';sa=look');
+			redirectexit('action=admin;area=', self::$_name ,';sa=look');
 		}
 		prepareDBSettingContext($config_vars);
 	}
