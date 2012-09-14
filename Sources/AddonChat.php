@@ -135,7 +135,19 @@ class AddonChat
 
 				$query = $smcFunc['db_query']('', '
 					UPDATE {db_prefix}'. self::$_dbTableName .'
-					SET edition_code = {int:read}, modules = {string:modules}, remote_auth_capable = {int:remote_auth_capable}, full_service = {string:full_service}, expiration_date = {string:expiration_date}, remote_auth_enable = {int:remote_auth_enable}, remote_auth_url = {string:remote_auth_url}, server_name = {string:server_name}, tcp_port = {string:tcp_port}, control_panel_login = {strong:control_panel_login}, chat_title = {string:chat_title}, product_code = {string:product_code}, customer_code = {string:customer_code}',
+					SET edition_code = {int:edition_code},
+						modules = {string:modules},
+						remote_auth_capable = {int:remote_auth_capable},
+						full_service = {string:full_service},
+						expiration_date = {string:expiration_date},
+						remote_auth_enable = {int:remote_auth_enable},
+						remote_auth_url = {string:remote_auth_url},
+						server_name = {string:server_name},
+						tcp_port = {string:tcp_port},
+						control_panel_login = {string:control_panel_login},
+						chat_title = {string:chat_title},
+						product_code = {string:product_code},
+						customer_code = {string:customer_code}',
 					array(
 						'edition_code' =>$data[0],
 						'modules' => $data[1],
