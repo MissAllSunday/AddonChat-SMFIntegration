@@ -11,6 +11,7 @@
 		<database>install.php</database>
 		<code>hooks.php</code>
 		<modification>AddonChat.xml</modification>
+		<require-file name="ChatAuth.php" destination="$boarddir">Server Authentication</require-file>
 		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
 		<require-dir name="Sources" destination="$boarddir">Source files</require-dir>
 		<redirect url="$scripturl?action=admin;area=modsettings" timeout="3000"></redirect>
@@ -22,6 +23,7 @@
 		<modification reverse="true">AddonChat.xml</modification>
 		<remove-file name="$sourcedir/AddonChat.php" />
 		<remove-dir name="$sourcedir/AddonChat" />
+		<remove-file name="$boarddir/ChatAuth.php" />
 		<remove-file name="$themedir/AddonChat.template.php" />
 		<remove-file name="$languagedir/AddonChat.english.php" />
 	</uninstall>
