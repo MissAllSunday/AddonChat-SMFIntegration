@@ -28,25 +28,20 @@
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
-	global $user_info, $context;
+	global $user_info;
 
-	/* Set the var */
-	$context['chat_ras'] = '';
+	/* The external server needs a plain text file... */
+	header("Content-type: text/plain");
 
 	/* We need both username and password */
-	if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']))
-		$context['chat_ras'] = '-1'. PHP_EOL;
-
-	/* They got to have something... */
-	if (empty($_REQUEST['username']) || empty($_REQUEST['password']))
-		$context['chat_ras'] = '-1'. PHP_EOL;
+	if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']) || empty($_REQUEST['username']) || empty($_REQUEST['password']))
+		die('-1'. PHP_EOL);
 
 	/* Cleaning */
 	$_REQUEST['username'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['username']));
 	$_REQUEST['password'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['password']));
 
-	/* The external server needs a plain text file... */
-	header("Content-type: text/plain");
+	/* There will be a lot of checks here */
 
 	/* Print it */
 	print 'scras.version = 2.1'. PHP_EOL;
