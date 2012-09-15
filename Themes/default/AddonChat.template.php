@@ -53,8 +53,8 @@
 								language:"en"
 							}
 							var addonchat_param = {
-								username: '. $user_info['username'] .',
-								password: '. $user_info['passwd'] .',
+								username: "'. $user_info['username'] .'",
+								password: "'. $user_info['passwd'] .'",
 								autologin: true,
 								mycolor: "#000000",
 								myfont: "Verdana-PLAIN-13",

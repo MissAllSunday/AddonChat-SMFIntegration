@@ -77,7 +77,7 @@ class AddonChatTools
 	{
 		/* Set the name */
 		$this->_name = Addonchat::$_name;
-	
+
 		/* Set the pattern property with $_name's value */
 		$this->_pattern = '/'. $this->_name .'_/';
 
@@ -131,7 +131,7 @@ class AddonChatTools
 	 */
 	public function extract()
 	{
-		$query = self::query();
+		global $smcFunc;
 
 		/* This won't be updated that frecuently */
 		if (($this->gSetting = cache_get_data(AddonChat::$_name .':gSettings', 600)) == null)

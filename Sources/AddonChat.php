@@ -45,9 +45,9 @@ class AddonChat
 
 	/**
 	 * @var string The name of the DB table
-	 * @access protected
+	 * @access public
 	 */
-	protected static $_dbTableName = 'addonchat';
+	public static $_dbTableName = 'addonchat';
 
 	public function __construct()
 	{

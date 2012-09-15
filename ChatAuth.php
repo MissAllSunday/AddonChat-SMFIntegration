@@ -55,3 +55,6 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	print 'user.usergroup.icon = 0'. PHP_EOL;
 	print 'user.usergroup.can_msg = true'. PHP_EOL;
 	print 'user.usergroup.idle_kick = true'. PHP_EOL;
+
+	/* Thats al we need */
+	die();
