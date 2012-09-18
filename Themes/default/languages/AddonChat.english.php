@@ -43,8 +43,18 @@ $txt['AddonChat_no_pass_set'] = 'You need to introduce your number ID and passwo
 $txt['AddonChat_error_from_server'] = 'There is an error comming from the server, the error is: %s';
 $txt['AddonChat_error_fetching_server'] = 'The server isn\'t responding, please try again later';
 $txt['AddonChat_server_OK'] = 'The settings were saved succesfully';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
+$txt['AddonChat_settings_message_true'] = '<strong>You have successfully connected to the chat server</strong>, the info has been added to the DB.<p /> Follow the steps below to enable remote authentication for your AddonChat chat room:<br />
+<ol>
+<li><a href="%1$s" target="_blank">Login to your AddonChat Customer Account</a></li>
+<li>Enter the AddonChat Account Control Panel for the account that you wish to enable remote authentication</li>
+<li>Select the Settings tab from within the AdodnChat Account Control Panel</li>
+<li>Select the Site Integration link in the Settings submenu</li>
+<li>Select the Remote Authentication link in the Site Integration sub-menu</li>
+<li>Set Enable Remote Authentication to Yes</li>
+<li>Enter the full URL (beginning with http://) to your authentication script next to Authentication URL, your unique full url is: <strong>%2$s</strong></li>
+<li>Click the "Click Here to Save Changes" button</li>
+</ol><p />If you wish to update the settings, you can call the server again by clicking this link: '. $txt['AddonChat_server_call'];
+$txt['AddonChat_settings_message_false'] = 'You haven\'t connect to the server yet, you need to connect to the server to be able to use this mod, please add your ID and password in the fields below and click save.<p />After that please click this link: '. $txt['AddonChat_server_call'] .' to connect to the chat server, if sucesfully, you will see the next steps.';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';

@@ -267,14 +267,14 @@ class AddonChat
 		$tools = self::tools();
 
 		$admin_areas['config']['areas'][self::$_name] = array(
-					'label' => $tools->getText('default_menu'),
-					'file' => self::$_name .'.php',
-					'function' => 'AddonChat_SubActions_Wrapper',
-					'icon' => 'posts.gif',
-					'subsections' => array(
-						'general' => array($tools->getText('general_settings')),
-						'look' => array($tools->getText('look_settings'))
-				),
+			'label' => $tools->getText('default_menu'),
+			'file' => self::$_name .'.php',
+			'function' => 'AddonChat_SubActions_Wrapper',
+			'icon' => 'posts.gif',
+			'subsections' => array(
+				'general' => array($tools->getText('general_settings')),
+				'look' => array($tools->getText('look_settings'))
+			),
 		);
 	}
 
@@ -328,7 +328,7 @@ class AddonChat
 	 */
 	static function generalSettings($return_config = false)
 	{
-		global $scripturl, $txt, $context, $sourcedir;
+		global $scripturl, $txt, $context, $sourcedir, $boardurl;
 
 		/* We need this */
 		require_once($sourcedir . '/ManageServer.php');
@@ -340,10 +340,6 @@ class AddonChat
 			array('check', self::$_name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
 			array('int', self::$_name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
 			array('text', self::$_name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
-
-			/* Ugly, I know */
-			'',
-			$tools->getText('server_call'),
 		);
 
 		if ($return_config)
@@ -352,6 +348,17 @@ class AddonChat
 		/* Set some settings for the page */
 		$context['post_url'] = $scripturl . '?action=admin;area='. self::$_name .';sa=general;save';
 		$context['page_title'] = $tools->getText('default_menu');
+
+		/* Get the global settings */
+		$gSettings = $tools->globalSettingAll();
+
+		/* If the user has sucesfully called the external site, lets tell them */
+		if (!empty($gSettings))
+			$context['settings_message'] =  sprintf($tools->getText('settings_message_true'), $gSettings['control_panel_login'], $boardurl .'/ChatAuth.php');
+
+		/* No? then tell them how to connect */
+		else
+			$context['settings_message'] =  $tools->getText('settings_message_false');
 
 		if (isset($_GET['server']))
 		{

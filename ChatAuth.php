@@ -28,7 +28,11 @@
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
-	global $user_info;
+	global $user_info, $modSettings;
+
+	/* The mod must be enable */
+	if (empty($modSettings['Addonchat_enable_general']))
+		die('-1'. PHP_EOL);
 
 	/* The external server needs a plain text file... */
 	header('Content-type: text/plain');
