@@ -55,6 +55,13 @@ $txt['AddonChat_settings_message_true'] = '<strong>You have successfully connect
 <li>Click the "Click Here to Save Changes" button</li>
 </ol><p />If you wish to update the settings, you can call the server again by clicking this link: '. $txt['AddonChat_server_call'];
 $txt['AddonChat_settings_message_false'] = 'You haven\'t connect to the server yet, you need to connect to the server to be able to use this mod, please add your ID and password in the fields below and click save.<p />After that please click this link: '. $txt['AddonChat_server_call'] .' to connect to the chat server, if sucesfully, you will see the next steps.';
+$txt['AddonChat_menu_position'] = 'Select the position for the FAQ button in the menu';
+$txt['AddonChat_menu_position_sub'] = 'By default is next to home.';
+$txt['AddonChat_menu_home'] = 'Next to the Home button';
+$txt['AddonChat_menu_help'] = 'Next to the Help button';
+$txt['AddonChat_menu_search'] = 'Next to the Search button';
+$txt['AddonChat_menu_login'] = 'Next to the Login button';
+$txt['AddonChat_menu_register'] = 'Next to the Register button';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';

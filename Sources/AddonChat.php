@@ -340,6 +340,15 @@ class AddonChat
 			array('check', self::$_name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
 			array('int', self::$_name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
 			array('text', self::$_name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+			array('select', self::$_name .'_menu_position', array(
+					'home' => $tools->getText('menu_home', 'Text'),
+					'help' => $tools->getText('menu_help'),
+					'search' => $tools->getText('menu_search'),
+					'login' => $tools->getText('menu_login'),
+					'register' => $tools->getText('menu_register')
+				),
+				'subtext' => $tools->getText('menu_position_sub')
+			),
 		);
 
 		if ($return_config)
@@ -352,7 +361,7 @@ class AddonChat
 		/* Get the global settings */
 		$gSettings = $tools->globalSettingAll();
 
-		/* If the user has sucesfully called the external site, lets tell them */
+		/* If the user has sucesfully called the external site, lets tell them the next steps */
 		if (!empty($gSettings))
 			$context['settings_message'] =  sprintf($tools->getText('settings_message_true'), $gSettings['control_panel_login'], $boardurl .'/ChatAuth.php');
 
