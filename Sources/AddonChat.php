@@ -3,7 +3,7 @@
 /**
  * AddonChat Integration mod (SMF)
  *
- * @package SMF
+ * @package Addonchat Integration
  * @author Suki <missallsunday@simplemachines.org>
  * @copyright 2012 Jessica González
  * @license http://www.mozilla.org/MPL/ MPL 2.0
@@ -28,6 +28,20 @@
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
+/* Autoload */
+function __autoload($class_name)
+{
+	global $sourcedir;
+
+	$file_path = $sourcedir .'/AddonChat/'. $class_name .'.php';
+
+	if(file_exists($file_path))
+		require_once($file_path);
+
+	else
+		return false;
+}
+
 /**
  * Wrapper function
  *
@@ -35,7 +49,7 @@ if (!defined('SMF'))
  */
 function AddonChat_SubActions_Wrapper(){AddonChat::subActions();};
 
-class AddonChat extends AddonChatTools
+class AddonChat
 {
 	protected $_user;
 	protected $_data = array();
@@ -55,179 +69,7 @@ class AddonChat extends AddonChatTools
 
 	protected static function tools()
 	{
-		global $sourcedir;
-
-		require_once($sourcedir .'/'. self::$name .'/AddonChatTools.php');
 		return AddonChatTools::getInstance();
-	}
-
-	/*
-	 * Calls the external server to retrieve the server number and client ID
-	 *
-	 * This will be done just 1 time, the function will store the values on the DB
-	 * @access public
-	 * @return array An array containing the fetched values
-	 */
-	public function getAccount()
-	{
-		global $sourcedir, $smcFunc;
-
-		/* Set what we need */
-		$tools = self::tools();
-
-		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
-		if (!$tools->enable('pass') || !$tools->enable('number_id'))
-			fatal_lang_error(self::$name .'_no_pass_set', false);
-
-		/* Requires a function in a source file far far away... */
-		require_once($sourcedir .'/Subs-Package.php');
-
-		/* Lets md5 the pass */
-		$pass = md5($tools->getSetting('pass'));
-
-		/* Build the url */
-		$url = $this->serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw='. $pass;
-
-		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
-		$data = fetch_web_data($url);
-
-		/* Oops, something went wrong, tell the user to try later */
-		if ($data == null)
-			fatal_lang_error(self::$name .'_error_fetching_server', false);
-
-		/* We got something */
-		$data = explode(PHP_EOL, $data);
-
-		/* Cleaning */
-		foreach ($data as $key => $value)
-			if (trim($value) == '')
-				unset($data[$key]);
-
-		/* The server says no */
-		if ($data[0] == '-1')
-			fatal_lang_error(self::$name .'_error_from_server', false, array($data[2]));
-
-		/* Make sure the data is what is supposed to be, $data[1] must match this regex: /\((.+)\)/ */
-		if (preg_match('/\((.+)\)/', $data[1]))
-		{
-			/* Make a quick query to see if theres data already saved */
-			$query = $smcFunc['db_query']('', '
-				SELECT customer_code
-				FROM {db_prefix}'. self::$_dbTableName .'',
-				array()
-			);
-
-			while($row = $smcFunc['db_fetch_assoc']($query))
-				$result = $row;
-
-			$smcFunc['db_free_result']($query);
-
-			/* The following data will be converted to an int */
-			$data[0] = (int) $data[0];
-			$data[2] = (int) $data[2];
-			$data[5] = (int) $data[5];
-
-			/* There is, so make an update */
-			if (!empty($result))
-			{
-				/* Update the cache */
-				$tools->killCache();
-
-				$query = $smcFunc['db_query']('', '
-					UPDATE {db_prefix}'. self::$_dbTableName .'
-					SET edition_code = {int:edition_code},
-						modules = {string:modules},
-						remote_auth_capable = {int:remote_auth_capable},
-						full_service = {string:full_service},
-						expiration_date = {string:expiration_date},
-						remote_auth_enable = {int:remote_auth_enable},
-						remote_auth_url = {string:remote_auth_url},
-						servername = {string:servername},
-						tcp_port = {string:tcp_port},
-						control_panel_login = {string:control_panel_login},
-						chat_title = {string:chat_title},
-						product_code = {string:product_code},
-						customer_code = {string:customer_code}',
-					array(
-						'edition_code' =>$data[0],
-						'modules' => $data[1],
-						'remote_auth_capable' => $data[2],
-						'full_service' => $data[3],
-						'expiration_date' => $data[4],
-						'remote_auth_enable' => $data[5],
-						'remote_auth_url' => $data[6],
-						'servername' => $data[7],
-						'tcp_port' => $data[8],
-						'control_panel_login' => $data[9],
-						'chat_title' => $data[10],
-						'product_code' => $data[11],
-						'customer_code' => $data[12],
-					)
-				);
-			}
-
-			/* No data, create the rows */
-			else
-				$smcFunc['db_insert']('replace',
-					'{db_prefix}'. self::$_dbTableName,
-				array(
-						'edition_code' => 'int',
-						'modules' => 'string',
-						'remote_auth_capable' => 'int',
-						'full_service' => 'string',
-						'expiration_date' => 'string',
-						'remote_auth_enable' => 'int',
-						'remote_auth_url' =>'string',
-						'servername' => 'string',
-						'tcp_port' => 'string',
-						'control_panel_login' => 'string',
-						'chat_title' => 'string',
-						'product_code' => 'string',
-						'customer_code' => 'string',
-				),
-				$data,
-				array(
-					'customer_code',
-				)
-				);
-		}
-	}
-
-	/*
-	 * Calls the external server to retrieve info about who is chatting
-	 *
-	 * Uses the SMF cache system
-	 * @access public
-	 * @return array An array containing the fetched values
-	 */
-	public function whoChatting()
-	{
-		global $sourcedir;
-
-		/* Requires a function in a source file far far away... */
-		require_once($sourcedir .'/Subs-Package.php');
-
-		/* Get the global settings */
-		$gSettings = self::tools()->globalSettingAll();
-
-		/* Built the url */
-		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . intval(self::tools()->getSetting('number_id')) . '&port=' . intval($gSettings['tcp_port']) .'&roompw=' . urlencode(md5(self::tools()->getSetting('pass')));
-
-		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
-		$data = fetch_web_data($url);
-
-		/* Oops, something went wrong, tell the user to try later */
-		if ($data == null)
-		{
-			/* probably not the right place to do this, will be temp */
-			fatal_lang_error(self::$name .'_error_fetching_server', false);
-
-			/* Give something to return */
-			return false;
-		}
-
-		else
-			return $data;
 	}
 
 	public static function main()
@@ -320,7 +162,6 @@ class AddonChat extends AddonChatTools
 	 *
 	 * @access public
 	 * @static
-	 * @param boolean
 	 * @return void
 	 */
 	public static function subActions()
@@ -333,6 +174,15 @@ class AddonChat extends AddonChatTools
 		/* Get the text strings */
 		$tools = self::tools();
 
+		$context[$context['admin_menu_name']]['tab_data'] = array(
+			'title' => $tools->getText('default_menu'),
+			'description' => $tools->getText('admin_panel_desc'),
+			'tabs' => array(
+				'general' => array(),
+				'look' => array()
+			),
+		);
+
 		/* Set the page title */
 		$context['page_title'] = $tools->getText('default_menu');
 
@@ -342,16 +192,6 @@ class AddonChat extends AddonChatTools
 		);
 
 		loadGeneralSettingParameters($subActions, 'general');
-
-		$context[$context['admin_menuname']]['tab_data'] = array(
-			'title' => $tools->getText('default_menu'),
-			'description' => $tools->getText('admin_panel_desc'),
-			'tabs' => array(
-				'general' => array(),
-				'look' => array()
-			),
-		);
-
 		call_user_func($subActions[$_REQUEST['sa']]);
 	}
 
@@ -408,7 +248,7 @@ class AddonChat extends AddonChatTools
 
 		if (isset($_GET['server']))
 		{
-			$connect = new self();
+			$connect = new AddonChatServer();
 			$connect->getAccount();
 
 			redirectexit('action=admin;area=AddonChat');

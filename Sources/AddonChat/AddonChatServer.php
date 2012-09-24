@@ -1,0 +1,215 @@
+<?php
+
+/**
+ * AddonChat Integration mod (SMF)
+ *
+ * @package Addonchat Integration
+ * @author Suki <missallsunday@simplemachines.org>
+ * @copyright 2012 Jessica González
+ * @license http://www.mozilla.org/MPL/ MPL 2.0
+ *
+ * @version 1.0
+ */
+
+/*
+ * Version: MPL 2.0
+ *
+ * This Source Code Form is subject to the terms of the Mozilla Public License, v. 2.0.
+ * If a copy of the MPL was not distributed with this file,
+ * You can obtain one at http://mozilla.org/MPL/2.0/
+ *
+ * Software distributed under the License is distributed on an "AS IS" basis,
+ * WITHOUT WARRANTY OF ANY KIND, either express or implied. See the License
+ * for the specific language governing rights and limitations under the
+ * License.
+ *
+ */
+
+if (!defined('SMF'))
+	die('Hacking attempt...');
+
+/**
+ * AddonchatServer
+ *
+ * Makes call to the external Chat server
+ * @package AddonChat
+ */
+class AddonChatServer extends Addonchat
+{
+	/**
+	 * Initialize the tools() method from AddonChatTools class.
+	 *
+	 * @access public
+	 * @return void
+	 */
+	public function __construct()
+	{
+		/* We need to global settings */
+		$this->_settings = parent::tools();
+	}
+
+	/*
+	 * Calls the external server to retrieve info about who is chatting
+	 *
+	 * Uses the SMF cache system
+	 * @access public
+	 * @return array An array containing the fetched values
+	 */
+	public function whoChatting()
+	{
+		global $sourcedir;
+
+		/* Requires a function in a source file far far away... */
+		require_once($sourcedir .'/Subs-Package.php');
+
+		/* Get the global settings */
+		$gSettings = $this->_settings->globalSettingAll();
+
+		/* Built the url */
+		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . intval($this->_settings->getSetting('number_id')) . '&port=' . intval($gSettings['tcp_port']) .'&roompw=' . urlencode(md5($this->_settings->getSetting('pass')));
+
+		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
+		$data = fetch_web_data($url);
+
+		/* Some process here, etc */
+
+		/* Oops, something went wrong, tell the user to try later */
+		if ($data == null)
+			return false;
+
+		else
+			return $data;
+	}
+
+	/*
+	 * Calls the external server to retrieve the server number and client ID
+	 *
+	 * This will be done just 1 time, the function will store the values on the DB
+	 * @access public
+	 * @return array An array containing the fetched values
+	 */
+	public function getAccount()
+	{
+		global $sourcedir, $smcFunc;
+
+		/* Set what we need */
+		$tools = $this->_settings;
+
+		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
+		if (!$tools->enable('pass') || !$tools->enable('number_id'))
+			fatal_lang_error(parent::$name .'_no_pass_set', false);
+
+		/* Requires a function in a source file far far away... */
+		require_once($sourcedir .'/Subs-Package.php');
+
+		/* Lets md5 the pass */
+		$pass = md5($tools->getSetting('pass'));
+
+		/* Build the url */
+		$url = $this->serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw='. $pass;
+
+		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
+		$data = fetch_web_data($url);
+
+		/* Oops, something went wrong, tell the user to try later */
+		if ($data == null)
+			fatal_lang_error(parent::$name .'_error_fetching_server', false);
+
+		/* We got something */
+		$data = explode(PHP_EOL, $data);
+
+		/* Cleaning */
+		foreach ($data as $key => $value)
+			if (trim($value) == '')
+				unset($data[$key]);
+
+		/* The server says no */
+		if ($data[0] == '-1')
+			fatal_lang_error(parent::$name .'_error_from_server', false, array($data[2]));
+
+		/* Make sure the data is what is supposed to be, $data[1] must match this regex: /\((.+)\)/ */
+		if (preg_match('/\((.+)\)/', $data[1]))
+		{
+			/* Make a quick query to see if theres data already saved */
+			$query = $smcFunc['db_query']('', '
+				SELECT customer_code
+				FROM {db_prefix}'. parent::$_dbTableName .'',
+				array()
+			);
+
+			while($row = $smcFunc['db_fetch_assoc']($query))
+				$result = $row;
+
+			$smcFunc['db_free_result']($query);
+
+			/* The following data will be converted to an int */
+			$data[0] = (int) $data[0];
+			$data[2] = (int) $data[2];
+			$data[5] = (int) $data[5];
+
+			/* There is, so make an update */
+			if (!empty($result))
+			{
+				/* Update the cache */
+				$tools->killCache();
+
+				$query = $smcFunc['db_query']('', '
+					UPDATE {db_prefix}'. parent::$_dbTableName .'
+					SET edition_code = {int:edition_code},
+						modules = {string:modules},
+						remote_auth_capable = {int:remote_auth_capable},
+						full_service = {string:full_service},
+						expiration_date = {string:expiration_date},
+						remote_auth_enable = {int:remote_auth_enable},
+						remote_auth_url = {string:remote_auth_url},
+						servername = {string:servername},
+						tcp_port = {string:tcp_port},
+						control_panel_login = {string:control_panel_login},
+						chat_title = {string:chat_title},
+						product_code = {string:product_code},
+						customer_code = {string:customer_code}',
+					array(
+						'edition_code' =>$data[0],
+						'modules' => $data[1],
+						'remote_auth_capable' => $data[2],
+						'full_service' => $data[3],
+						'expiration_date' => $data[4],
+						'remote_auth_enable' => $data[5],
+						'remote_auth_url' => $data[6],
+						'servername' => $data[7],
+						'tcp_port' => $data[8],
+						'control_panel_login' => $data[9],
+						'chat_title' => $data[10],
+						'product_code' => $data[11],
+						'customer_code' => $data[12],
+					)
+				);
+			}
+
+			/* No data, create the rows */
+			else
+				$smcFunc['db_insert']('replace',
+					'{db_prefix}'. parent::$_dbTableName,
+					array(
+							'edition_code' => 'int',
+							'modules' => 'string',
+							'remote_auth_capable' => 'int',
+							'full_service' => 'string',
+							'expiration_date' => 'string',
+							'remote_auth_enable' => 'int',
+							'remote_auth_url' =>'string',
+							'servername' => 'string',
+							'tcp_port' => 'string',
+							'control_panel_login' => 'string',
+							'chat_title' => 'string',
+							'product_code' => 'string',
+							'customer_code' => 'string',
+					),
+					$data,
+					array(
+						'customer_code',
+					)
+				);
+		}
+	}
+}

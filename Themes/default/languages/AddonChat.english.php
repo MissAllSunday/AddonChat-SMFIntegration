@@ -3,7 +3,7 @@
 /**
  * AddonChat Integration mod (SMF)
  *
- * @package SMF
+ * @package Addonchat Integration
  * @author Suki <missallsunday@simplemachines.org>
  * @copyright 2012 Jessica González
  * @license http://www.mozilla.org/MPL/ MPL 2.0
