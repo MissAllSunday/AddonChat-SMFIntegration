@@ -55,7 +55,7 @@ class AddonChat
 	protected $_data = array();
 	protected $_rows = array();
 	public static $name = 'AddonChat';
-	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
+	protected $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
 	/**
 	 * @var string The name of the DB table

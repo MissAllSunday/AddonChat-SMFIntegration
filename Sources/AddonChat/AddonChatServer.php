@@ -44,6 +44,9 @@ class AddonChatServer extends Addonchat
 	 */
 	public function __construct()
 	{
+		/* Call the parent */
+		parent::__construct();
+
 		/* We need to global settings */
 		$this->_settings = parent::tools();
 	}
@@ -162,7 +165,7 @@ class AddonChatServer extends Addonchat
 						expiration_date = {string:expiration_date},
 						remote_auth_enable = {int:remote_auth_enable},
 						remote_auth_url = {string:remote_auth_url},
-						servername = {string:servername},
+						server_name = {string:server_name},
 						tcp_port = {string:tcp_port},
 						control_panel_login = {string:control_panel_login},
 						chat_title = {string:chat_title},
@@ -176,7 +179,7 @@ class AddonChatServer extends Addonchat
 						'expiration_date' => $data[4],
 						'remote_auth_enable' => $data[5],
 						'remote_auth_url' => $data[6],
-						'servername' => $data[7],
+						'server_name' => $data[7],
 						'tcp_port' => $data[8],
 						'control_panel_login' => $data[9],
 						'chat_title' => $data[10],
@@ -198,7 +201,7 @@ class AddonChatServer extends Addonchat
 							'expiration_date' => 'string',
 							'remote_auth_enable' => 'int',
 							'remote_auth_url' =>'string',
-							'servername' => 'string',
+							'server_name' => 'string',
 							'tcp_port' => 'string',
 							'control_panel_login' => 'string',
 							'chat_title' => 'string',
