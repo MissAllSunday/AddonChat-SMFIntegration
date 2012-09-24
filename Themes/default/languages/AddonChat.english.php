@@ -38,7 +38,7 @@ $txt['AddonChat_number_id'] = 'Your number ID';
 $txt['AddonChat_number_id_sub'] = 'Numeric portion of AddonChat account number. Should be something like: SC-000, take away the SC- part and just use the numbers.';
 $txt['AddonChat_pass'] = 'Your addonChat password';
 $txt['AddonChat_pass_sub'] = 'The integration script needs your password to connect with the chat server.';
-$txt['AddonChat_server_call'] = '<a href="'. $scripturl . '?action=admin;area='. AddonChat::$_name .';sa=general;server">Server Call</a>';
+$txt['AddonChat_server_call'] = '<a href="'. $scripturl . '?action=admin;area='. AddonChat::$name .';sa=general;server">Server Call</a>';
 $txt['AddonChat_no_pass_set'] = 'You need to introduce your number ID and password first, please go back and fill out the required fields and try again.';
 $txt['AddonChat_error_from_server'] = 'There is an error comming from the server, the error is: %s';
 $txt['AddonChat_error_fetching_server'] = 'The server isn\'t responding, please try again later';
@@ -62,7 +62,10 @@ $txt['AddonChat_menu_help'] = 'Next to the Help button';
 $txt['AddonChat_menu_search'] = 'Next to the Search button';
 $txt['AddonChat_menu_login'] = 'Next to the Login button';
 $txt['AddonChat_menu_register'] = 'Next to the Register button';
-$txt['AddonChat_'] = '';
+$txt['AddonChat_noscript'] = 'To enter this chat room, please enable JavaScript in your web
+								browser. This <a href="http://www.addonchat.com/">Chat
+								Software</a> requires Java: <a href="http://www.java.com/">Get
+								Java Now</a>';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';

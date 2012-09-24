@@ -34,7 +34,7 @@ if (!defined('SMF'))
  * How to use:
  *
  * - Change the name of the class to something unique
- * - Set the $_name property with your own mod name, $modSettings and $txt keys should use the same name followed by an underscore, example:
+ * - Set the $name property with your own mod name, $modSettings and $txt keys should use the same name followed by an underscore, example:
  *   $txt[MyMod_enable], $modSettings[MyMod_enable], etc.
  * - Load the file via __autoload() or some other method.
  * @package OharaTools
@@ -62,13 +62,13 @@ class AddonChatTools
 	protected $_text = array();
 
 	/**
-	 * @var string The pattern used to search the modsettings and txt arrays, should be: /identifier_/ this is defined with the value of $_name
+	 * @var string The pattern used to search the modsettings and txt arrays, should be: /identifier_/ this is defined with the value of $name
 	 * @access protected
 	 */
 	protected $_pattern;
 
 	/**
-	 * Initialize the extract() method and sets the pattern property using $_name's value.
+	 * Initialize the extract() method and sets the pattern property using $name's value.
 	 *
 	 * @access protected
 	 * @return void
@@ -76,10 +76,10 @@ class AddonChatTools
 	protected function __construct()
 	{
 		/* Set the name */
-		$this->_name = Addonchat::$_name;
+		$this->name = Addonchat::$name;
 
-		/* Set the pattern property with $_name's value */
-		$this->_pattern = '/'. $this->_name .'_/';
+		/* Set the pattern property with $name's value */
+		$this->_pattern = '/'. $this->name .'_/';
 
 		$this->gSetting = array();
 
@@ -120,7 +120,7 @@ class AddonChatTools
 	 */
 	public function killCache()
 	{
-		cache_put_data(AddonChat::$_name .':gSettings', '');
+		cache_put_data(AddonChat::$name .':gSettings', '');
 	}
 
 	/**
@@ -134,7 +134,7 @@ class AddonChatTools
 		global $smcFunc;
 
 		/* This won't be updated that frecuently */
-		if (($this->gSetting = cache_get_data(AddonChat::$_name .':gSettings', 600)) == null)
+		if (($this->gSetting = cache_get_data(AddonChat::$name .':gSettings', 600)) == null)
 		{
 			$query = $smcFunc['db_query']('', '
 				SELECT *
@@ -146,7 +146,7 @@ class AddonChatTools
 				$this->gSetting = $row;
 
 			/* Cache this beauty */
-			cache_put_data(AddonChat::$_name .':gSettings', $this->gSetting, 600);
+			cache_put_data(AddonChat::$name .':gSettings', $this->gSetting, 600);
 		}
 	}
 
@@ -198,7 +198,7 @@ class AddonChatTools
 	{
 		global $modSettings;
 
-		if (!empty($modSettings[$this->_name .'_'. $var]))
+		if (!empty($modSettings[$this->name .'_'. $var]))
 			return true;
 
 		else
@@ -219,8 +219,8 @@ class AddonChatTools
 		if (empty($var))
 			return false;
 
-		elseif (!empty($modSettings[$this->_name .'_'. $var]))
-			return $modSettings[$this->_name .'_'. $var];
+		elseif (!empty($modSettings[$this->name .'_'. $var]))
+			return $modSettings[$this->name .'_'. $var];
 
 		else
 			return false;
@@ -238,9 +238,9 @@ class AddonChatTools
 		global $txt;
 
 		/* Load the mod's language file */
-		loadLanguage($this->_name);
+		loadLanguage($this->name);
 
-		if (!empty($txt[$this->_name .'_'. $var]))
-			return $txt[$this->_name .'_'. $var];
+		if (!empty($txt[$this->name .'_'. $var]))
+			return $txt[$this->name .'_'. $var];
 	}
 }

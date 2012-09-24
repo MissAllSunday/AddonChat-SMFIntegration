@@ -47,7 +47,7 @@
 							var addonchat = {
 								signed:true,
 								server:1,
-								id:', $context[AddonChat::$_name]['tools']->getSetting('number_id') ,',
+								id:', $context[AddonChat::$name]['tools']->getSetting('number_id') ,',
 								width:"625",
 								height:"380",
 								language:"en"
@@ -65,10 +65,7 @@
 							 <script type="text/javascript"
 								src="http://client1.addonchat.com/chat.js"></script>
 							 <noscript>
-								To enter this chat room, please enable JavaScript in your web
-								browser. This <a href="http://www.addonchat.com/">Chat
-								Software</a> requires Java: <a href="http://www.java.com/">Get
-								Java Now</a>
+								', $context[AddonChat::$name]['tools']->getText('noscript') ,'
 							</noscript>
 					</div>
 				</div>
@@ -82,5 +79,5 @@
 	{
 		global $context;
 
-		print $context[AddonChat::$_name]['ras'];
+		print $context[AddonChat::$name]['ras'];
 	}

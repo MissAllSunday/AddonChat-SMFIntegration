@@ -35,12 +35,12 @@ if (!defined('SMF'))
  */
 function AddonChat_SubActions_Wrapper(){AddonChat::subActions();};
 
-class AddonChat
+class AddonChat extends AddonChatTools
 {
 	protected $_user;
 	protected $_data = array();
 	protected $_rows = array();
-	public static $_name = 'AddonChat';
+	public static $name = 'AddonChat';
 	private $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
 
 	/**
@@ -57,7 +57,7 @@ class AddonChat
 	{
 		global $sourcedir;
 
-		require_once($sourcedir .'/'. self::$_name .'/AddonChatTools.php');
+		require_once($sourcedir .'/'. self::$name .'/AddonChatTools.php');
 		return AddonChatTools::getInstance();
 	}
 
@@ -77,7 +77,7 @@ class AddonChat
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
-			fatal_lang_error(self::$_name .'_no_pass_set', false);
+			fatal_lang_error(self::$name .'_no_pass_set', false);
 
 		/* Requires a function in a source file far far away... */
 		require_once($sourcedir .'/Subs-Package.php');
@@ -88,12 +88,12 @@ class AddonChat
 		/* Build the url */
 		$url = $this->serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw='. $pass;
 
-		/* Attempts to fetch data from a URL, regardless of PHP's allow_url_fopen setting */
+		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
 		$data = fetch_web_data($url);
 
 		/* Oops, something went wrong, tell the user to try later */
 		if ($data == null)
-			fatal_lang_error(self::$_name .'_error_fetching_server', false);
+			fatal_lang_error(self::$name .'_error_fetching_server', false);
 
 		/* We got something */
 		$data = explode(PHP_EOL, $data);
@@ -105,7 +105,7 @@ class AddonChat
 
 		/* The server says no */
 		if ($data[0] == '-1')
-			fatal_lang_error(self::$_name .'_error_from_server', false, array($data[2]));
+			fatal_lang_error(self::$name .'_error_from_server', false, array($data[2]));
 
 		/* Make sure the data is what is supposed to be, $data[1] must match this regex: /\((.+)\)/ */
 		if (preg_match('/\((.+)\)/', $data[1]))
@@ -142,7 +142,7 @@ class AddonChat
 						expiration_date = {string:expiration_date},
 						remote_auth_enable = {int:remote_auth_enable},
 						remote_auth_url = {string:remote_auth_url},
-						server_name = {string:server_name},
+						servername = {string:servername},
 						tcp_port = {string:tcp_port},
 						control_panel_login = {string:control_panel_login},
 						chat_title = {string:chat_title},
@@ -156,7 +156,7 @@ class AddonChat
 						'expiration_date' => $data[4],
 						'remote_auth_enable' => $data[5],
 						'remote_auth_url' => $data[6],
-						'server_name' => $data[7],
+						'servername' => $data[7],
 						'tcp_port' => $data[8],
 						'control_panel_login' => $data[9],
 						'chat_title' => $data[10],
@@ -178,7 +178,7 @@ class AddonChat
 						'expiration_date' => 'string',
 						'remote_auth_enable' => 'int',
 						'remote_auth_url' =>'string',
-						'server_name' => 'string',
+						'servername' => 'string',
 						'tcp_port' => 'string',
 						'control_panel_login' => 'string',
 						'chat_title' => 'string',
@@ -193,13 +193,50 @@ class AddonChat
 		}
 	}
 
+	/*
+	 * Calls the external server to retrieve info about who is chatting
+	 *
+	 * Uses the SMF cache system
+	 * @access public
+	 * @return array An array containing the fetched values
+	 */
+	public function whoChatting()
+	{
+		global $sourcedir;
+
+		/* Requires a function in a source file far far away... */
+		require_once($sourcedir .'/Subs-Package.php');
+
+		/* Get the global settings */
+		$gSettings = self::tools()->globalSettingAll();
+
+		/* Built the url */
+		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . intval(self::tools()->getSetting('number_id')) . '&port=' . intval($gSettings['tcp_port']) .'&roompw=' . urlencode(md5(self::tools()->getSetting('pass')));
+
+		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
+		$data = fetch_web_data($url);
+
+		/* Oops, something went wrong, tell the user to try later */
+		if ($data == null)
+		{
+			/* probably not the right place to do this, will be temp */
+			fatal_lang_error(self::$name .'_error_fetching_server', false);
+
+			/* Give something to return */
+			return false;
+		}
+
+		else
+			return $data;
+	}
+
 	public static function main()
 	{
 		global $context, $scripturl;
 
 		$tools = self::tools();
 
-		loadTemplate(self::$_name);
+		loadTemplate(self::$name);
 
 		$context['page_title'] =  $tools->getText('title_main');
 		$context['linktree'][] = array(
@@ -211,14 +248,14 @@ class AddonChat
 		$context['robot_no_index'] = true;
 
 		/* Get all the global settings */
-		$context[self::$_name]['global_settings'] = $tools->globalSettingAll();
-		$context[self::$_name]['tools'] = $tools;
+		$context[self::$name]['global_settings'] = $tools->globalSettingAll();
+		$context[self::$name]['tools'] = $tools;
 	}
 
 	/* Action hook */
 	public static function actions(&$actions)
 	{
-		$actions['chat'] = array(self::$_name .'.php', self::$_name .'::main');
+		$actions['chat'] = array(self::$name .'.php', self::$name .'::main');
 	}
 
 	/* Permissions hook */
@@ -266,9 +303,9 @@ class AddonChat
 	{
 		$tools = self::tools();
 
-		$admin_areas['config']['areas'][self::$_name] = array(
+		$admin_areas['config']['areas'][self::$name] = array(
 			'label' => $tools->getText('default_menu'),
-			'file' => self::$_name .'.php',
+			'file' => self::$name .'.php',
 			'function' => 'AddonChat_SubActions_Wrapper',
 			'icon' => 'posts.gif',
 			'subsections' => array(
@@ -306,7 +343,7 @@ class AddonChat
 
 		loadGeneralSettingParameters($subActions, 'general');
 
-		$context[$context['admin_menu_name']]['tab_data'] = array(
+		$context[$context['admin_menuname']]['tab_data'] = array(
 			'title' => $tools->getText('default_menu'),
 			'description' => $tools->getText('admin_panel_desc'),
 			'tabs' => array(
@@ -337,10 +374,10 @@ class AddonChat
 
 		/* Generate the settings */
 		$config_vars = array(
-			array('check', self::$_name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
-			array('int', self::$_name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
-			array('text', self::$_name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
-			array('select', self::$_name .'_menu_position', array(
+			array('check', self::$name .'_enable_general', 'subtext' => $tools->getText('enable_general_sub')),
+			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
+			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
+			array('select', self::$name .'_menu_position', array(
 					'home' => $tools->getText('menu_home', 'Text'),
 					'help' => $tools->getText('menu_help'),
 					'search' => $tools->getText('menu_search'),
@@ -355,7 +392,7 @@ class AddonChat
 			return $config_vars;
 
 		/* Set some settings for the page */
-		$context['post_url'] = $scripturl . '?action=admin;area='. self::$_name .';sa=general;save';
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=general;save';
 		$context['page_title'] = $tools->getText('default_menu');
 
 		/* Get the global settings */
@@ -413,7 +450,7 @@ class AddonChat
 			return $config_vars;
 
 		/* Page settings */
-		$context['post_url'] = $scripturl . '?action=admin;area='. self::$_name .';sa=look;save';
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=look;save';
 		$context['page_title'] = $tools->getText('default_menu');
 
 		/* Save */
@@ -421,7 +458,7 @@ class AddonChat
 		{
 			checkSession();
 			saveDBSettings($config_vars);
-			redirectexit('action=admin;area=', self::$_name ,';sa=look');
+			redirectexit('action=admin;area=', self::$name ,';sa=look');
 		}
 		prepareDBSettingContext($config_vars);
 	}
