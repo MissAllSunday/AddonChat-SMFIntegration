@@ -44,11 +44,24 @@ class AddonChatServer extends Addonchat
 	 */
 	public function __construct()
 	{
+		global $sourcedir, $smcFunc;
+
+		$this->_sourcedir = $sourcedir;
+		$this->_smcFunc = $smcFunc;
+
 		/* Call the parent */
 		parent::__construct();
 
 		/* We need to global settings */
 		$this->_settings = parent::tools();
+	}
+
+	protected function fetch_web_data($url)
+	{
+		/* Requires a function in a source file far far away... */
+		require_once($this->_sourcedir .'/Subs-Package.php');
+
+		return fetch_web_data($url);
 	}
 
 	/*
@@ -60,11 +73,6 @@ class AddonChatServer extends Addonchat
 	 */
 	public function whoChatting()
 	{
-		global $sourcedir;
-
-		/* Requires a function in a source file far far away... */
-		require_once($sourcedir .'/Subs-Package.php');
-
 		/* Get the global settings */
 		$gSettings = $this->_settings->globalSettingAll();
 
@@ -72,7 +80,7 @@ class AddonChatServer extends Addonchat
 		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . intval($this->_settings->getSetting('number_id')) . '&port=' . intval($gSettings['tcp_port']) .'&roompw=' . urlencode(md5($this->_settings->getSetting('pass')));
 
 		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
-		$data = fetch_web_data($url);
+		$data = $this->fetch_web_data($url);
 
 		/* Some process here, etc */
 
@@ -93,17 +101,12 @@ class AddonChatServer extends Addonchat
 	 */
 	public function getAccount()
 	{
-		global $sourcedir, $smcFunc;
-
 		/* Set what we need */
 		$tools = $this->_settings;
 
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
 		if (!$tools->enable('pass') || !$tools->enable('number_id'))
 			fatal_lang_error(parent::$name .'_no_pass_set', false);
-
-		/* Requires a function in a source file far far away... */
-		require_once($sourcedir .'/Subs-Package.php');
 
 		/* Lets md5 the pass */
 		$pass = md5($tools->getSetting('pass'));
@@ -112,7 +115,7 @@ class AddonChatServer extends Addonchat
 		$url = $this->serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw='. $pass;
 
 		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
-		$data = fetch_web_data($url);
+		$data = $this->fetch_web_data($url);
 
 		/* Oops, something went wrong, tell the user to try later */
 		if ($data == null)
@@ -134,16 +137,16 @@ class AddonChatServer extends Addonchat
 		if (preg_match('/\((.+)\)/', $data[1]))
 		{
 			/* Make a quick query to see if theres data already saved */
-			$query = $smcFunc['db_query']('', '
+			$query = $this->_smcFunc['db_query']('', '
 				SELECT customer_code
 				FROM {db_prefix}'. parent::$_dbTableName .'',
 				array()
 			);
 
-			while($row = $smcFunc['db_fetch_assoc']($query))
+			while($row = $this->_smcFunc['db_fetch_assoc']($query))
 				$result = $row;
 
-			$smcFunc['db_free_result']($query);
+			$this->_smcFunc['db_free_result']($query);
 
 			/* The following data will be converted to an int */
 			$data[0] = (int) $data[0];
@@ -156,7 +159,7 @@ class AddonChatServer extends Addonchat
 				/* Update the cache */
 				$tools->killCache();
 
-				$query = $smcFunc['db_query']('', '
+				$query = $this->_smcFunc['db_query']('', '
 					UPDATE {db_prefix}'. parent::$_dbTableName .'
 					SET edition_code = {int:edition_code},
 						modules = {string:modules},
@@ -191,7 +194,7 @@ class AddonChatServer extends Addonchat
 
 			/* No data, create the rows */
 			else
-				$smcFunc['db_insert']('replace',
+				$this->_smcFunc['db_insert']('replace',
 					'{db_prefix}'. parent::$_dbTableName,
 					array(
 							'edition_code' => 'int',
