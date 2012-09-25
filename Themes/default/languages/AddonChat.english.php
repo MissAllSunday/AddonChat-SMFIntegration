@@ -67,7 +67,7 @@ $txt['AddonChat_noscript'] = 'To enter this chat room, please enable JavaScript 
 								Software</a> requires Java: <a href="http://www.java.com/">Get
 								Java Now</a>';
 $txt['AddonChat_permission_style'] = 'Select how do you want to hadle the chat permissions';
-$txt['AddonChat_permission_style_sub'] = 'by group will group all similar permissions under 3 big permissions, admin, moderator and regular user<br /> individual will create individual SMF permissions foreach chat permission, this gives great flexibility.';
+$txt['AddonChat_permission_style_sub'] = 'by group will group all similar permissions under 3 big permissions, admin, moderator and regular user<br /> individual will create individual SMF permissions foreach chat permission, keep in mind that if you change how the permissions are used, you need to properly set all the permissions for your user groups all over again (this include profile permissions), it is highly recommended that you don\'t change this setting that often.';
 $txt['AddonChat_permission_style_individual'] = 'Individual';
 $txt['AddonChat_permission_style_group'] = 'Group';
 $txt['AddonChat_'] = '';
@@ -76,4 +76,4 @@ $txt['AddonChat_'] = '';
 
 
 // Who's online strings
-$txt['whoall_chat'] = 'Viewing the <a href="'. $scripturl. '?action=faq">Chat page</a>.';
+$txt['whoall_chat'] = 'Viewing the <a href="'. $scripturl. '?action=chat">Chat page</a>.';
