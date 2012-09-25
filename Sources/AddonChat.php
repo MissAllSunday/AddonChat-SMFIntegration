@@ -218,13 +218,19 @@ class AddonChat
 			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
 			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
 			array('select', self::$name .'_menu_position', array(
-					'home' => $tools->getText('menu_home', 'Text'),
+					'home' => $tools->getText('menu_home'),
 					'help' => $tools->getText('menu_help'),
 					'search' => $tools->getText('menu_search'),
 					'login' => $tools->getText('menu_login'),
 					'register' => $tools->getText('menu_register')
 				),
 				'subtext' => $tools->getText('menu_position_sub')
+			),
+			array('select', self::$name .'_permission_style', array(
+					'group' => $tools->getText('permission_style_group'),
+					'individual' => $tools->getText('permission_style_individual'),
+				),
+				'subtext' => $tools->getText('permission_style_sub')
 			),
 		);
 
