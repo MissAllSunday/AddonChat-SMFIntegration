@@ -163,7 +163,7 @@ class AddonChat
 			'icon' => 'posts.gif',
 			'subsections' => array(
 				'general' => array($tools->getText('general_settings')),
-				'look' => array($tools->getText('look_settings'))
+				/* 'look' => array($tools->getText('look_settings')) */
 			),
 		);
 	}
@@ -190,7 +190,7 @@ class AddonChat
 			'description' => $tools->getText('admin_panel_desc'),
 			'tabs' => array(
 				'general' => array(),
-				'look' => array()
+				/* 'look' => array() */
 			),
 		);
 
@@ -199,7 +199,7 @@ class AddonChat
 
 		$subActions = array(
 			'general' => 'self::generalSettings',
-			'look' => 'self::lookSettings'
+			/* 'look' => 'self::lookSettings' */
 		);
 
 		loadGeneralSettingParameters($subActions, 'general');
@@ -310,7 +310,7 @@ class AddonChat
 
 		/* Page settings */
 		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=look;save';
-		$context['page_title'] = $tools->getText('default_menu');
+		$context['page_title'] = self::tools()->getText('default_menu');
 
 		/* Save */
 		if (isset($_GET['save']))
