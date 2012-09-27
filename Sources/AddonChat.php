@@ -56,6 +56,7 @@ class AddonChat
 	protected $_rows = array();
 	public static $name = 'AddonChat';
 	protected $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
+	public static $permissions = array( 'see_chat', 'can_msg', 'can_action', 'allow_pm', 'allow_room_create', 'allow_avatars', 'can_random', 'allow_bbcode', 'allow_color', 'msg_scroll', 'filter_shout', 'filter_profanity', 'filter_word_replace', 'can_nick', 'can_kick', 'can_affect_admin', 'can_grant', 'can_cloak', 'can_see_cloak', 'login_cloaked', 'can_ban', 'can_ban_subnet', 'can_system_speak', 'can_silence', 'can_fnick', 'can_launch_website', 'can_transfer', 'can_join_nopw', 'can_topic', 'can_close', 'can_ipquery', 'can_geo_locate', 'can_query_ether', 'can_clear_screen', 'can_clear_history', 'allow_room_create', 'see_chat', );
 
 	/**
 	 * @var string The name of the DB table
@@ -67,7 +68,7 @@ class AddonChat
 	{
 	}
 
-	protected static function tools()
+	public static function tools()
 	{
 		return AddonChatTools::getInstance();
 	}
@@ -107,45 +108,12 @@ class AddonChat
 		$permissionGroups['membergroup']['simple'] = array(self::$name .'_per_simple');
 		$permissionGroups['membergroup']['classic'] = array(self::$name .'_per_classic');
 
-		/* This one is general, allow to see the chat */
-		$permissionList['membergroup'][self::$name .'_see_chat'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
+		/* Get the permissions array */
+		$temp = self::$permissions;
 
-		/* Large, large permission list */
-		$permissionList['membergroup'][self::$name .'_can_msg'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_action'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_allow_pm'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_allow_room_create'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_allow_avatars'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_random'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_allow_bbcode'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_allow_color'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_msg_scroll'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_filter_shout'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_filter_profanity'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_filter_word_replace'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_nick'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_kick'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_affect_admin'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_grant'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_cloak'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_see_cloak'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_login_cloaked'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_ban'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_ban_subnet'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_system_speak'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_silence'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_fnick'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_launch_website'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_transfer'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_join_nopw'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_topic'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_close'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_ipquery'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_geo_locate'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_query_ether'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_clear_screen'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_clear_history'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
-		$permissionList['membergroup'][self::$name .'_can_clear_history'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
+		/* Print specific permissions by user */
+		foreach ($temp as $k)
+			$permissionList['membergroup'][self::$name .'_'. $k] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
 	}
 
 	/* Button menu hook */

@@ -243,4 +243,20 @@ class AddonChatTools
 		if (!empty($txt[$this->name .'_'. $var]))
 			return $txt[$this->name .'_'. $var];
 	}
+	
+	/**
+	 * Get all txt strings.
+	 *
+	 * @access public
+	 * @return array
+	 */
+	public function getAllText()
+	{
+		global $txt;
+
+		/* Load the mod's language file */
+		loadLanguage($this->name);
+
+		return $txt;
+	}
 }

@@ -49,9 +49,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	if ($user_info['passwd'] != $_REQUEST['password'] || $user_info['username'] != $_REQUEST['username'])
 		die('-1'. PHP_EOL);
 
-	/* There will be a lot of checks here */
-
-	/* Print it */
+	/* Print it the general info*/
 	print 'scras.version = 2.1'. PHP_EOL;
 	print 'user.usergroup.id = 0'. PHP_EOL;
 	print 'user.uid  = '. $user_info['id'] . PHP_EOL;
@@ -59,6 +57,11 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	print 'user.usergroup.icon = 0'. PHP_EOL;
 	print 'user.usergroup.can_msg = true'. PHP_EOL;
 	print 'user.usergroup.idle_kick = true'. PHP_EOL;
+
+	/* Print specific permissions by user */
+	foreach (AddonChat::$permissions as $k)
+		if (allowedTo(AddonChat::$name .'_'. $k))
+			print 'user.usergroup.'. $k .'= true'. PHP_EOL;
 
 	/* Thats al we need */
 	die();
