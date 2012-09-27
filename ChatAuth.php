@@ -94,10 +94,10 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	foreach (AddonChat::$permissions as $k)
 	{
 		if (allowedTo(AddonChat::$name .'_'. $k))
-			print 'user.usergroup.'. $k .'= 1'. PHP_EOL;
+			print 'user.usergroup.'. $k .' = 1'. PHP_EOL;
 
 		else
-			print 'user.usergroup.'. $k .'= 0'. PHP_EOL;
+			print 'user.usergroup.'. $k .' = 0'. PHP_EOL;
 	}
 
 	/* General settings */

@@ -125,7 +125,7 @@ class AddonChat
 		$tools = self::tools();
 
 		/* Check */
-		$tools->isEnable();
+		self::isEnable();
 
 		loadTemplate(self::$name);
 

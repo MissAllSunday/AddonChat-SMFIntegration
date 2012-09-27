@@ -33,7 +33,7 @@
 			<div class="cat_bar">
 				<h3 class="catbg">
 					<span class="ie6_header floatleft">
-						some title here
+						', $context[AddonChat::$name]['tools']->getText('title_main') ,'
 					</span>
 				</h3>
 			</div>
@@ -42,7 +42,7 @@
 			</span>
 			<div class="roundframe rfix">
 				<div class="innerframe">
-					<div class="content">
+					<div class="content" style="margin:auto; text-align:center;">
 						<script type="text/javascript">/*<![CDATA[*/
 							var addonchat = {
 								signed:true,
@@ -59,7 +59,7 @@
 								mycolor: "#000000",
 								myfont: "Verdana-PLAIN-13",
 								url_exit_enable: true,
-								url_exit: "http://www.addonchat.com"
+								url_exit: "'. $scripturl .'"
 							}
 							 /* ]]> */</script>
 							 <script type="text/javascript"
