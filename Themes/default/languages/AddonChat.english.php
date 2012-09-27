@@ -70,8 +70,8 @@ $txt['AddonChat_permission_style'] = 'Select how do you want to hadle the chat p
 $txt['AddonChat_permission_style_sub'] = 'by group will group all similar permissions under 3 big permissions, admin, moderator and regular user<br /> individual will create individual SMF permissions foreach chat permission, keep in mind that if you change how the permissions are used, you need to properly set all the permissions for your user groups all over again (this include profile permissions), it is highly recommended that you don\'t change this setting that often.';
 $txt['AddonChat_permission_style_individual'] = 'Individual';
 $txt['AddonChat_permission_style_group'] = 'Group';
-$txt['AddonChat_'] = '';
-$txt['AddonChat_'] = '';
+$txt['AddonChat_max_msg_length'] = 'Maximum message length in characters';
+$txt['AddonChat_max_msg_length_sub'] = 'This counts spaces as well.';
 $txt['AddonChat_'] = '';
 
 /* Permissions strings */
@@ -113,13 +113,6 @@ $txt['permissionname_AddonChat_can_clear_screen'] = 'Allow user to clear screens
 $txt['permissionname_AddonChat_can_clear_history'] = 'Allow user to clear recent room history';
 $txt['permissionname_AddonChat_allow_room_create'] = 'Allow user to create new rooms';
 $txt['permissionname_AddonChat_see_chat'] = 'Allow the user to see the Chat';
-$txt['permissionname_AddonChat_'] = '';
-$txt['permissionname_AddonChat_'] = '';
-$txt['permissionname_AddonChat_'] = '';
-$txt['permissionname_AddonChat_'] = '';
-$txt['permissionname_AddonChat_'] = '';
-
-
 
 // Who's online strings
 $txt['whoall_chat'] = 'Viewing the <a href="'. $scripturl. '?action=chat">Chat page</a>.';

@@ -30,8 +30,10 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 
 	global $memberContext, $user_info, $modSettings;
 
+	$tools = AddonChat::tools();
+
 	/* The mod must be enable */
-	if (empty($modSettings['AddonChat_enable_general']))
+	if (!$tools->enable('enable_general'))
 		die('-1'. PHP_EOL);
 
 	/* The external server needs a plain text file... */
@@ -97,6 +99,10 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		else
 			print 'user.usergroup.'. $k .'= 0'. PHP_EOL;
 	}
+
+	/* General settings */
+	if ($tools->enable('max_msg_length'))
+	print 'user.usergroup.max_msg_length = '. $tools->getSetting('max_msg_length') . PHP_EOL;
 
 	/* Thats al we need */
 	die();
