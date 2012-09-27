@@ -61,7 +61,6 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	print 'user.usergroup.id = 0'. PHP_EOL;
 	print 'user.uid  = '. $user_info['id'] . PHP_EOL;
 	print 'user.usergroup.can_login  = 1'. PHP_EOL;
-	print 'user.usergroup.icon = 0'. PHP_EOL;
 	print 'user.usergroup.idle_kick = 1'. PHP_EOL;
 
 	/* Permissions and settings for admin only */
@@ -70,7 +69,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 
 	/* Print the title */
 	if (!empty($user['group']))
-		print 'user.usergroup.title = "'. $user['group'] .'"'. PHP_EOL;
+		print 'user.usergroup.title = "'. strip_tags($user['group']) .'"'. PHP_EOL;
 
 	/* Set the icon */
 	if (!empty($user['group_id']))
@@ -102,7 +101,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 
 	/* General settings */
 	if ($tools->enable('max_msg_length'))
-	print 'user.usergroup.max_msg_length = '. $tools->getSetting('max_msg_length') . PHP_EOL;
+		print 'user.usergroup.max_msg_length = '. $tools->getSetting('max_msg_length') . PHP_EOL;
 
 	/* Thats al we need */
 	die();

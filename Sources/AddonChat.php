@@ -69,7 +69,7 @@ class AddonChat
 	protected $_rows = array();
 	public static $name = 'AddonChat';
 	protected $serverUrl = 'http://clientx.addonchat.com/queryaccount.php';
-	public static $permissions = array( 'see_chat', 'can_msg', 'can_action', 'allow_pm', 'allow_room_create', 'allow_avatars', 'can_random', 'allow_bbcode', 'allow_color', 'msg_scroll', 'filter_shout', 'filter_profanity', 'filter_word_replace', 'can_nick', 'can_kick', 'can_affect_admin', 'can_grant', 'can_cloak', 'can_see_cloak', 'login_cloaked', 'can_ban', 'can_ban_subnet', 'can_system_speak', 'can_silence', 'can_fnick', 'can_launch_website', 'can_transfer', 'can_join_nopw', 'can_topic', 'can_close', 'can_ipquery', 'can_geo_locate', 'can_query_ether', 'can_clear_screen', 'can_clear_history', 'allow_room_create', 'see_chat', );
+	public static $permissions = array('can_msg', 'can_action', 'allow_pm', 'allow_room_create', 'allow_avatars', 'can_random', 'allow_bbcode', 'allow_color', 'msg_scroll', 'filter_shout', 'filter_profanity', 'filter_word_replace', 'can_nick', 'can_kick', 'can_affect_admin', 'can_grant', 'can_cloak', 'can_see_cloak', 'login_cloaked', 'can_ban', 'can_ban_subnet', 'can_system_speak', 'can_silence', 'can_fnick', 'can_launch_website', 'can_transfer', 'can_join_nopw', 'can_topic', 'can_close', 'can_ipquery', 'can_geo_locate', 'can_query_ether', 'can_clear_screen', 'can_clear_history', 'allow_room_create',);
 
 	/**
 	 * @var string The name of the DB table
@@ -170,6 +170,9 @@ class AddonChat
 		/* Name of the different permissions style */
 		$permissionGroups['membergroup']['simple'] = array(self::$name .'_per_simple');
 		$permissionGroups['membergroup']['classic'] = array(self::$name .'_per_classic');
+
+		/* This is a general permission, see the chat */
+		$permissionList['membergroup'][self::$name .'_see_chat'] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
 
 		/* Get the permissions array */
 		$temp = self::$permissions;
