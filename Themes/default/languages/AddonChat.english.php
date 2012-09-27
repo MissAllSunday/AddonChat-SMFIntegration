@@ -72,7 +72,7 @@ $txt['AddonChat_permission_style_individual'] = 'Individual';
 $txt['AddonChat_permission_style_group'] = 'Group';
 $txt['AddonChat_max_msg_length'] = 'Maximum message length in characters';
 $txt['AddonChat_max_msg_length_sub'] = 'This counts spaces as well.';
-$txt['AddonChat_'] = '';
+$txt['AddonChat_no_guest'] = 'I\'m sorry, guest cannot see the chat';
 
 /* Permissions strings */
 $txt['permissiongroup_simple_AddonChat_per_simple'] = 'AddonChat mod permissions';

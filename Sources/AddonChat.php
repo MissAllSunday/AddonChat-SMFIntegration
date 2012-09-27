@@ -99,6 +99,9 @@ class AddonChat
 
 		loadLanguage(self::$name);
 
+		/* Guest cannot see the chat */
+		is_not_guest(self::tools()->getText('no_guest'));
+
 		if (!self::tools()->enable('enable_general'))
 			redirectexit();
 

@@ -14,7 +14,7 @@
 		<require-file name="ChatAuth.php" destination="$boarddir">Server Authentication</require-file>
 		<require-dir name="Themes" destination="$boarddir">Source files</require-dir>
 		<require-dir name="Sources" destination="$boarddir">Source files</require-dir>
-		<redirect url="$scripturl?action=admin;area=modsettings" timeout="3000"></redirect>
+		<redirect url="$scripturl?action=admin;area=AddonChat" timeout="3000"></redirect>
 	</install>
 
 	<uninstall>
