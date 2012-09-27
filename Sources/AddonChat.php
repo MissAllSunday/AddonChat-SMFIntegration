@@ -312,12 +312,6 @@ class AddonChat
 				),
 				'subtext' => $tools->getText('menu_position_sub')
 			),
-			array('select', self::$name .'_permission_style', array(
-					'group' => $tools->getText('permission_style_group'),
-					'individual' => $tools->getText('permission_style_individual'),
-				),
-				'subtext' => $tools->getText('permission_style_sub')
-			),
 			array('int', self::$name .'_max_msg_length', 'size' => 10, 'subtext' => $tools->getText('max_msg_length_sub')),
 		);
 

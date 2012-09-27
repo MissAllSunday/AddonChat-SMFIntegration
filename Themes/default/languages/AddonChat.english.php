@@ -54,20 +54,15 @@ $txt['AddonChat_settings_message_true'] = '<strong>You have successfully connect
 <li>Enter the full URL (beginning with http://) to your authentication script next to Authentication URL, your unique full url is: <strong>%2$s</strong></li>
 <li>Click the "Click Here to Save Changes" button</li>
 </ol><p />If you wish to update the settings, you can call the server again by clicking this link: '. $txt['AddonChat_server_call'];
-$txt['AddonChat_settings_message_false'] = 'You haven\'t connect to the server yet, you need to connect to the server to be able to use this mod, please add your ID and password in the fields below and click save.<p />After that please click this link: '. $txt['AddonChat_server_call'] .' to connect to the chat server, if sucesfully, you will see the next steps.';
-$txt['AddonChat_menu_position'] = 'Select the position for the FAQ button in the menu';
+$txt['AddonChat_settings_message_false'] = 'You haven\'t connect to the server yet, you need to connect to the server to be able to use this mod, please add your ID and password in the fields below and click save.<p />After that please click this link: '. $txt['AddonChat_server_call'] .' to connect to the chat server, if successfully, you will see the next steps.';
+$txt['AddonChat_menu_position'] = 'Select the position for the Chat Button in the menu';
 $txt['AddonChat_menu_position_sub'] = 'By default is next to home.';
 $txt['AddonChat_menu_home'] = 'Next to the Home button';
 $txt['AddonChat_menu_help'] = 'Next to the Help button';
 $txt['AddonChat_menu_search'] = 'Next to the Search button';
 $txt['AddonChat_menu_login'] = 'Next to the Login button';
 $txt['AddonChat_menu_register'] = 'Next to the Register button';
-$txt['AddonChat_noscript'] = 'To enter this chat room, please enable JavaScript in your web
-								browser. This <a href="http://www.addonchat.com/">Chat
-								Software</a> requires Java: <a href="http://www.java.com/">Get
-								Java Now</a>';
-$txt['AddonChat_permission_style'] = 'Select how do you want to hadle the chat permissions';
-$txt['AddonChat_permission_style_sub'] = 'by group will group all similar permissions under 3 big permissions, admin, moderator and regular user<br /> individual will create individual SMF permissions foreach chat permission, keep in mind that if you change how the permissions are used, you need to properly set all the permissions for your user groups all over again (this include profile permissions), it is highly recommended that you don\'t change this setting that often.';
+$txt['AddonChat_noscript'] = 'To enter this chat room, please enable JavaScript in your web browser. This <a href="http://www.addonchat.com/">Chat Software</a> requires Java: <a href="http://www.java.com/">Get Java Now</a>';
 $txt['AddonChat_permission_style_individual'] = 'Individual';
 $txt['AddonChat_permission_style_group'] = 'Group';
 $txt['AddonChat_max_msg_length'] = 'Maximum message length in characters';
