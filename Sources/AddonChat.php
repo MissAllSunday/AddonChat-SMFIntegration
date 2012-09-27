@@ -25,10 +25,17 @@
  *
  */
 
+/* No direct Access! */
 if (!defined('SMF'))
 	die('Hacking attempt...');
 
-/* Autoload */
+/**
+ * Autoload, checks if the file exists inside the AddonChat folder, this is called automatically
+ *
+ * @access public
+ * @param string the Class name
+ * @return boolean false if there is no file to load
+ */
 function __autoload($class_name)
 {
 	global $sourcedir;
@@ -43,12 +50,18 @@ function __autoload($class_name)
 }
 
 /**
- * Wrapper function
+ * Wrapper function, SMF cannot handle static methods being called via a variable: $static_method();
  *
- * SMF cannot handle static methods being called via a variable: $static_method();
+ * @access public
+ * @return void
  */
 function AddonChat_SubActions_Wrapper(){AddonChat::subActions();};
 
+/**
+ * The main class
+ * @package Addonchat Integration
+ * @subpackage classes
+ */
 class AddonChat
 {
 	protected $_user;
@@ -64,9 +77,7 @@ class AddonChat
 	 */
 	public static $_dbTableName = 'addonchat';
 
-	public function __construct()
-	{
-	}
+	public function __construct(){}
 
 	public static function tools()
 	{
@@ -77,6 +88,7 @@ class AddonChat
 	 * Checks if the mod is enable, if it is, checks if the user has access to the chat
 	 *
 	 * @access public
+	 * @global array $txt The text array
 	 * @static
 	 * @param boolean if true, check if the user is allowed to see the chat
 	 * @return void
@@ -94,6 +106,15 @@ class AddonChat
 			isAllowedTo(self::$name .'_see_chat');
 	}
 
+	/**
+	 * The main funciton that loads the chat inside the action=chat page
+	 *
+	 * @access public
+	 * @global array $context An array used to pass variables to the template
+	 * @global string $scripturl the actual forum's full url
+	 * @static
+	 * @return void
+	 */
 	public static function main()
 	{
 		global $context, $scripturl;
@@ -119,13 +140,28 @@ class AddonChat
 		$context[self::$name]['tools'] = $tools;
 	}
 
-	/* Action hook */
+	/**
+	 * Action hook creates the action=chat actions which later is used to create a separate page inside the forum structure
+	 *
+	 * @access public
+	 * @param array $actions passed by reference, holds all the actions in SMF until this method is called
+	 * @static
+	 * @return void
+	 */
 	public static function actions(&$actions)
 	{
 		$actions['chat'] = array(self::$name .'.php', self::$name .'::main');
 	}
 
-	/* Permissions hook */
+	/**
+	 * Permissions hook creates the permissions checks used by the integration
+	 *
+	 * @access public
+	 * @param array $permissionGroups passed by reference, holds all the permissions groups
+	 * @param array $permissionList passed by reference, holds all the permissions lists
+	 * @static
+	 * @return void
+	 */
 	public static function permissions(&$permissionGroups, &$permissionList)
 	{
 		/* Name of the different permissions style */
@@ -140,7 +176,14 @@ class AddonChat
 			$permissionList['membergroup'][self::$name .'_'. $k] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
 	}
 
-	/* Button menu hook */
+	/**
+	 * Button hook creates a Chat button on the main SMF menu
+	 *
+	 * @access public
+	 * @param array $menu_buttons passed by reference, holds all the possible buttons on the menu.
+	 * @static
+	 * @return void
+	 */
 	public static function menu(&$menu_buttons)
 	{
 		global $scripturl;

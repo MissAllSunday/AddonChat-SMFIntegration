@@ -32,7 +32,7 @@ if (!defined('SMF'))
  * AddonchatServer
  *
  * Makes call to the external Chat server
- * @package AddonChat
+ * @package Addonchat Integration
  */
 class AddonChatServer extends Addonchat
 {
@@ -40,6 +40,8 @@ class AddonChatServer extends Addonchat
 	 * Initialize the tools() method from AddonChatTools class.
 	 *
 	 * @access public
+	 * @global string $sourcedir the path to the forum sources directory
+	 * @global array $smcFunc holds the SMD DB layer
 	 * @return void
 	 */
 	public function __construct()
@@ -56,6 +58,13 @@ class AddonChatServer extends Addonchat
 		$this->_settings = parent::tools();
 	}
 
+	/**
+	 * Tries to fetch the content of a given url
+	 *
+	 * @access protected
+	 * @param string $url the url to call
+	 * @return mixed either the page requested or a boolean false
+	 */
 	protected function fetch_web_data($url)
 	{
 		/* Safety first! */
