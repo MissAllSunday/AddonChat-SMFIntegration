@@ -73,11 +73,35 @@ class AddonChat
 		return AddonChatTools::getInstance();
 	}
 
+	/**
+	 * Checks if the mod is enable, if it is, checks if the user has access to the chat
+	 *
+	 * @access public
+	 * @static
+	 * @param boolean if true, check if the user is allowed to see the chat
+	 * @return void
+	 */
+	public static function isEnable($skip_view_permission = false)
+	{
+		global $txt;
+
+		loadLanguage(self::$name);
+
+		if (!self::tools()->enable('enable_general'))
+			redirectexit();
+
+		elseif ($skip_view_permission == false)
+			isAllowedTo(self::$name .'_see_chat');
+	}
+
 	public static function main()
 	{
 		global $context, $scripturl;
 
 		$tools = self::tools();
+
+		/* Check */
+		$tools->isEnable();
 
 		loadTemplate(self::$name);
 
@@ -137,7 +161,7 @@ class AddonChat
 			array('chat' => array(
 			'title' => $tools->getText('title_main'),
 			'href' => $scripturl . '?action=chat',
-			'show' => true,
+			'show' => $tools->enable('enable_general'),
 			'sub_buttons' => array(),
 		)),
 			array_slice($menu_buttons, $counter)

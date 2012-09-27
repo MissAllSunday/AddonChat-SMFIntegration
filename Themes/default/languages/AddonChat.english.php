@@ -113,6 +113,7 @@ $txt['permissionname_AddonChat_can_clear_screen'] = 'Allow user to clear screens
 $txt['permissionname_AddonChat_can_clear_history'] = 'Allow user to clear recent room history';
 $txt['permissionname_AddonChat_allow_room_create'] = 'Allow user to create new rooms';
 $txt['permissionname_AddonChat_see_chat'] = 'Allow the user to see the Chat';
+$txt['cannot_AddonChat_see_chat'] = 'I\'m sorry, you are not allowed to view the Chat.';
 
 // Who's online strings
 $txt['whoall_chat'] = 'Viewing the <a href="'. $scripturl. '?action=chat">Chat page</a>.';
