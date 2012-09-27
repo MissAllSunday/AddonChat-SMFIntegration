@@ -190,6 +190,10 @@ class AddonChat
 
 		$tools = self::tools();
 
+		/* Don't do anything if the mod is not enable */
+		if (!$tools->enable('enable_general'))
+			return;
+
 		$insert = $tools->enable('menu_position') ? $tools->getSetting('menu_position') : 'home';
 
 		/* Let's add our button next to the user's selection...
@@ -204,7 +208,7 @@ class AddonChat
 			array('chat' => array(
 			'title' => $tools->getText('title_main'),
 			'href' => $scripturl . '?action=chat',
-			'show' => $tools->enable('enable_general'),
+			'show' => allowedTo(self::$name .'_see_chat'),
 			'sub_buttons' => array(),
 		)),
 			array_slice($menu_buttons, $counter)
