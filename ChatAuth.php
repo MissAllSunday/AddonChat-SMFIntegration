@@ -28,10 +28,10 @@
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
-	global $user_info, $modSettings;
+	global $memberContext, $user_info, $modSettings;
 
 	/* The mod must be enable */
-	if (empty($modSettings['Addonchat_enable_general']))
+	if (empty($modSettings['AddonChat_enable_general']))
 		die('-1'. PHP_EOL);
 
 	/* The external server needs a plain text file... */
@@ -49,19 +49,54 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	if ($user_info['passwd'] != $_REQUEST['password'] || $user_info['username'] != $_REQUEST['username'])
 		die('-1'. PHP_EOL);
 
+	/* Load the users data */
+	$temp = loadMemberData($_REQUEST['username'], true, 'profile');
+	loadMemberContext($temp[0]);
+	$user = $memberContext[$temp[0]];
+
 	/* Print it the general info*/
 	print 'scras.version = 2.1'. PHP_EOL;
 	print 'user.usergroup.id = 0'. PHP_EOL;
 	print 'user.uid  = '. $user_info['id'] . PHP_EOL;
-	print 'user.usergroup.can_login  = true'. PHP_EOL;
+	print 'user.usergroup.can_login  = 1'. PHP_EOL;
 	print 'user.usergroup.icon = 0'. PHP_EOL;
-	print 'user.usergroup.can_msg = true'. PHP_EOL;
-	print 'user.usergroup.idle_kick = true'. PHP_EOL;
+	print 'user.usergroup.idle_kick = 1'. PHP_EOL;
+
+	/* Permissions and settings for admin only */
+	print 'user.usergroup.is_admin = '. ($user_info['is_admin'] == 1 ? '1' : '0') . PHP_EOL;
+	print 'user.usergroup.allow_html = '. ($user_info['is_admin'] == 1 ? '1' : '0') . PHP_EOL;
+
+	/* Print the title */
+	if (!empty($user['group']))
+		print 'user.usergroup.title = "'. $user['group'] .'"'. PHP_EOL;
+
+	/* Set the icon */
+	if (!empty($user['group_id']))
+		switch ($user['group_id'])
+		{
+			case 1:
+				print 'user.usergroup.icon = 2'. PHP_EOL;
+				break;
+			case 2:
+				print 'user.usergroup.icon = 3'. PHP_EOL;
+				break;
+			case 0:
+				print 'user.usergroup.icon = 0'. PHP_EOL;
+				break;
+			default:
+				print 'user.usergroup.icon = 0'. PHP_EOL;
+				break;
+		}
 
 	/* Print specific permissions by user */
 	foreach (AddonChat::$permissions as $k)
+	{
 		if (allowedTo(AddonChat::$name .'_'. $k))
-			print 'user.usergroup.'. $k .'= true'. PHP_EOL;
+			print 'user.usergroup.'. $k .'= 1'. PHP_EOL;
+
+		else
+			print 'user.usergroup.'. $k .'= 0'. PHP_EOL;
+	}
 
 	/* Thats al we need */
 	die();
