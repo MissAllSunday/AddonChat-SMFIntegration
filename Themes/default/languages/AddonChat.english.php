@@ -74,6 +74,52 @@ $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
 $txt['AddonChat_'] = '';
 
+/* Permissions strings */
+$txt['permissiongroup_simple_AddonChat_per_simple'] = 'AddonChat mod permissions';
+$txt['permissiongroup_AddonChat_per_classic'] = 'AddonChat mod permissions';
+$txt['permissionname_AddonChat_can_msg'] = 'Allow the user to post messages on the chat';
+$txt['permissionname_AddonChat_can_action'] = 'Allow the user to send action messages';
+$txt['permissionname_AddonChat_allow_pm'] = 'Allow the user to send private messages on the chat';
+$txt['permissionname_AddonChat_allow_room_creat'] = 'allow the user to create new rooms';
+$txt['permissionname_AddonChat_allow_avatars'] = 'Allow the user to select an avatar';
+$txt['permissionname_AddonChat_can_random'] = 'Allow the user to use the /roll command';
+$txt['permissionname_AddonChat_allow_bbcode'] = 'Allow BBCode in messages';
+$txt['permissionname_AddonChat_allow_color'] = 'Allow user to set message color';
+$txt['permissionname_AddonChat_msg_scroll'] = 'Enable message scroll-back feature';
+$txt['permissionname_AddonChat_filter_shout'] = 'Apply shout filter to this user';
+$txt['permissionname_AddonChat_filter_profanity'] = 'Apply word filters to this user';
+$txt['permissionname_AddonChat_filter_word_replace'] = 'Apply text replacement filters to this user';
+$txt['permissionname_AddonChat_can_nick'] = 'Allow user to change his/her name using /nick command';
+$txt['permissionname_AddonChat_can_kick'] = 'Allow user to kick other users';
+$txt['permissionname_AddonChat_can_affect_admin'] = 'Allow user to affect administrators';
+$txt['permissionname_AddonChat_can_grant'] = 'Can this user grant administrative privileges';
+$txt['permissionname_AddonChat_can_cloak'] = 'Can this user cloak';
+$txt['permissionname_AddonChat_can_see_cloak'] = 'Can this user see cloaked users';
+$txt['permissionname_AddonChat_login_cloaked'] = 'Forces user to be logged in cloaked';
+$txt['permissionname_AddonChat_can_ban'] = 'Can this user ban IP addresses';
+$txt['permissionname_AddonChat_can_ban_subnet'] = 'Can this user ban Class C subnets';
+$txt['permissionname_AddonChat_can_system_speak'] = 'Can this user speak as the system user';
+$txt['permissionname_AddonChat_can_silence'] = 'Can this user silence others';
+$txt['permissionname_AddonChat_can_fnick'] = 'Allow user use the /fnick command';
+$txt['permissionname_AddonChat_can_launch_website'] = 'Allow user to launch websites for other users';
+$txt['permissionname_AddonChat_can_transfer'] = 'Allow user to transfer users to another room';
+$txt['permissionname_AddonChat_can_join_nopw'] = 'Allow user to join password protected rooms freely';
+$txt['permissionname_AddonChat_can_topic'] = 'Allow user to set room topics';
+$txt['permissionname_AddonChat_can_close'] = 'Allow user to close rooms';
+$txt['permissionname_AddonChat_can_ipquery'] = 'Allow user to query IP addresses of other users';
+$txt['permissionname_AddonChat_can_geo_locate'] = 'Allow user to query geographic location of other users';
+$txt['permissionname_AddonChat_can_query_ether'] = 'Allow user to query ether';
+$txt['permissionname_AddonChat_can_clear_screen'] = 'Allow user to clear screens of other users';
+$txt['permissionname_AddonChat_can_clear_history'] = 'Allow user to clear recent room history';
+$txt['permissionname_AddonChat_allow_room_create'] = 'Allow user to create new rooms';
+$txt['permissionname_AddonChat_see_chat'] = 'Allow the user to see the Chat';
+$txt['permissionname_AddonChat_'] = '';
+$txt['permissionname_AddonChat_'] = '';
+$txt['permissionname_AddonChat_'] = '';
+$txt['permissionname_AddonChat_'] = '';
+$txt['permissionname_AddonChat_'] = '';
+
+
 
 // Who's online strings
 $txt['whoall_chat'] = 'Viewing the <a href="'. $scripturl. '?action=chat">Chat page</a>.';

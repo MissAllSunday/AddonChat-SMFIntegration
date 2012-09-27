@@ -58,9 +58,14 @@ class AddonChatServer extends Addonchat
 
 	protected function fetch_web_data($url)
 	{
+		/* Safety first! */
+		if (empty($url))
+			return false;
+
 		/* Requires a function in a source file far far away... */
 		require_once($this->_sourcedir .'/Subs-Package.php');
 
+		/* Send the result directly, we are gonna handle it on every case */
 		return fetch_web_data($url);
 	}
 
