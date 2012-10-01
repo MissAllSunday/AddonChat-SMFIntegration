@@ -141,6 +141,9 @@ class AddonChat
 		/* Get all the global settings */
 		$context[self::$name]['global_settings'] = $tools->globalSettingAll();
 		$context[self::$name]['tools'] = $tools;
+
+		/* Server_id needs to be an int too */
+		$context[self::$name]['global_settings']['server_id'] = preg_replace('[\D]', '', $context[AddonChat::$name]['tools']->globalSetting('server_name'));
 	}
 
 	/**

@@ -46,7 +46,7 @@
 						<script type="text/javascript">/*<![CDATA[*/
 							var addonchat = {
 								signed:true,
-								server:1,
+								server:', $context[AddonChat::$name]['global_settings']['server_id'] ,',
 								id:', $context[AddonChat::$name]['tools']->getSetting('number_id') ,',
 								width:"625",
 								height:"380",
@@ -61,9 +61,10 @@
 								url_exit_enable: true,
 								url_exit: "'. $scripturl .'"
 							}
-							 /* ]]> */</script>
+							 /* ]]> */
+						</script>
 							 <script type="text/javascript"
-								src="http://client1.addonchat.com/chat.js"></script>
+								src="http://'. $context[AddonChat::$name]['tools']->globalSetting('server_name') .'/chat.js"></script>
 							 <noscript>
 								', $context[AddonChat::$name]['tools']->getText('noscript') ,'
 							</noscript>
