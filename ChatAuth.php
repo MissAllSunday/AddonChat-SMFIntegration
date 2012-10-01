@@ -59,7 +59,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	/* Print it the general info*/
 	print 'scras.version = 2.1'. PHP_EOL;
 	print 'user.usergroup.id = 0'. PHP_EOL;
-	print 'user.uid  = '. $user_info['id'] . PHP_EOL;
+	print 'user.uid  = '. $user['id'] . PHP_EOL;
 	print 'user.usergroup.can_login  = 1'. PHP_EOL;
 	print 'user.usergroup.idle_kick = 1'. PHP_EOL;
 
@@ -103,5 +103,5 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	if ($tools->enable('max_msg_length'))
 		print 'user.usergroup.max_msg_length = '. $tools->getSetting('max_msg_length') . PHP_EOL;
 
-	/* Thats al we need */
+	/* Thats all we need */
 	die();

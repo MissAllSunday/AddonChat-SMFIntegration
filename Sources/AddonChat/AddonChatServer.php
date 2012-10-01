@@ -87,23 +87,61 @@ class AddonChatServer extends Addonchat
 	 */
 	public function whoChatting()
 	{
+		global $memberContext;
+
 		/* Get the global settings */
 		$gSettings = $this->_settings->globalSettingAll();
 
+		/* Set this as an empty array */
+		$return = array();
+
 		/* Built the url */
-		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=1&id=' . $this->_settings->getSetting('number_id') . '&port=' . $gSettings['tcp_port'] .'&roompw=' . md5($this->_settings->getSetting('pass'));
+		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . $this->_settings->getSetting('number_id') . '&port=' . $gSettings['tcp_port'] .'&roompw=' . md5($this->_settings->getSetting('pass'));
 
-		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
-		$data = $this->fetch_web_data($url);
+		/* Use the cache */
+		if (($return = cache_get_data(parent::$name .':whoschatting', 30)) == null)
+		{
+			/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
+			$data = $this->fetch_web_data($url);
 
-		/* Some process here, etc */
+			/* Oops, something went wrong, tell the user to try later */
+			if ($data == null)
+				fatal_lang_error(parent::$name .'_error_fetching_server', false);
 
-		/* Oops, something went wrong, tell the user to try later */
-		if ($data == null)
-			return false;
+			/* Get 1 user per line */
+			$temp = explode("\n", $data);
 
-		else
-			return $data;
+			/* Clean and separate each user */
+			foreach ($temp as $key => $value)
+				$temp2[] = explode("\t", $value);
+
+			/* Get the actual usernames */
+			foreach($temp2 as $t)
+				if (is_array($t))
+					if (!empty($t[1]))
+						$usernames[] = $t[1];
+
+			/* Load the users info */
+			$ids = loadMemberData($usernames, true, 'normal');
+
+			foreach ($ids as $i)
+			{
+				loadMemberContext($i);
+				$user[$i] = $memberContext[$i];
+			}
+
+			/* Append the data */
+			$return['users'] = $user;
+
+			/* Get the number of users */
+			$return['number'] = count($temp);
+
+			/* Cache this beauty */
+			cache_put_data(parent::$name .':whoschatting', $return, 30);
+		}
+
+		/* Return the data */
+		return $return;
 	}
 
 	/*
