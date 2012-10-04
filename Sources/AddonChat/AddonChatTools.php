@@ -243,4 +243,39 @@ class AddonChatTools
 		if (!empty($txt[$this->name .'_'. $var]))
 			return $txt[$this->name .'_'. $var];
 	}
+
+	/* Custom method to check the users permissions */
+	public static function loadPermissions($user_groups)
+	{
+		global $modSettings, $smcFunc, $sourcedir;
+
+		if (empty($user_groups))
+			return false;
+
+		$return = array();
+		$removals = array();
+
+		// Get the general permissions.
+		$request = $smcFunc['db_query']('', '
+			SELECT permission, add_deny
+			FROM {db_prefix}permissions
+			WHERE id_group IN ({array_int:member_groups})
+				AND permission  LIKE "AddonChat_%"',
+			array(
+				'member_groups' => $user_groups,
+			)
+		);
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+		{
+			if (empty($row['add_deny']))
+				$removals[] = $row['permission'];
+			else
+				$return[] = $row['permission'];
+		}
+
+		$smcFunc['db_free_result']($request);
+
+		return $return;
+	}
 }

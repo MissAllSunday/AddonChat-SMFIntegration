@@ -54,7 +54,7 @@
 							}
 							var addonchat_param = {
 								username: "'. $user_info['username'] .'",
-								password: "'. $user_info['passwd'] .'",
+								password: "'. md5($user_info['registered_timestamp']) .'",
 								autologin: true,
 								mycolor: "#000000",
 								myfont: "Verdana-PLAIN-13",
@@ -74,11 +74,4 @@
 			<span class="lowerframe">
 				<span></span>
 			</span><br />';
-	}
-
-	function template_addonChat_ras()
-	{
-		global $context;
-
-		print $context[AddonChat::$name]['ras'];
 	}
