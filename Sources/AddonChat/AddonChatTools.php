@@ -247,11 +247,14 @@ class AddonChatTools
 	/* Load user specific data */
 	public function loadData($user)
 	{
-		global $smcfunc;
+		global $smcFunc;
+
+		if (empty($user))
+			return false;
 
 		$select_columns = '
 			IFNULL(lo.log_time, 0) AS is_online, mem.id_member, mem.member_name,
-			mem.real_name, mem.date_registered, mem.id_post_group, mem.additional_groups, mg.online_color AS member_group_color, IFNULL(mg.group_name, {string:blank_string}) AS member_group';
+			mem.real_name, mem.date_registered, mem.id_post_group, mem.id_group, mem.passwd, mem.additional_groups, mg.online_color AS member_group_color, IFNULL(mg.group_name, {string:blank_string}) AS member_group';
 		$select_tables = '
 			LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
 			LEFT JOIN {db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
@@ -259,10 +262,11 @@ class AddonChatTools
 
 		$request = $smcFunc['db_query']('', '
 			SELECT' . $select_columns . '
-			FROM {db_prefix}members AS mem' . $select_tables . '
-			WHERE mem.member_name = {string:user}'),
+			FROM {db_prefix}members AS mem' . ($select_tables) . '
+			WHERE mem.member_name = {string:user}',
 			array(
 				'user' => $user,
+				'blank_string' => '',
 			)
 		);
 
@@ -270,6 +274,18 @@ class AddonChatTools
 
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$return = $row;
+
+		/* append the primary group to the list of additonal groups */
+		if (!empty($return['additional_groups']))
+		{
+			$return['additional_groups'] = explode(',', $return['additional_groups']);
+			$return['additional_groups'][] = $return['id_post_group'];
+			$return['additional_groups'][] = $return['id_group'];
+		}
+
+		/* If there is no additional groups, use the primary and post group */
+		else
+			$return['additional_groups'] = array($return['id_post_group'], $return['id_group']);
 
 		$smcFunc['db_free_result']($request);
 
@@ -284,6 +300,10 @@ class AddonChatTools
 		if (empty($user_groups))
 			return false;
 
+		/* Must be an array */
+		if (!is_array($user_groups))
+			$user_groups = array($user_groups);
+
 		$return = array();
 		$removals = array();
 
@@ -291,8 +311,7 @@ class AddonChatTools
 		$request = $smcFunc['db_query']('', '
 			SELECT permission, add_deny
 			FROM {db_prefix}permissions
-			WHERE id_group IN ({array_int:member_groups})
-				AND permission  LIKE "AddonChat_%"',
+			WHERE id_group IN ({array_int:member_groups})',
 			array(
 				'member_groups' => $user_groups,
 			)

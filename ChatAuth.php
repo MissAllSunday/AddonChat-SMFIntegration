@@ -49,38 +49,33 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	$_REQUEST['password'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['password']));
 
 	/* Load the users data */
-	$temp = loadMemberData($_REQUEST['username'], true, 'profile');
+	$user = $tools->loadData($_REQUEST['username']);
 
 	/* We got something, SMF always returns the data as an array */
-	if (!empty($temp) && is_array($temp))
+	if (!empty($user) && is_array($user))
 	{
-		loadMemberContext($temp[0]);
-		$user = $memberContext[$temp[0]];
-		
-		echo '<pre>';print_r($user);echo '</pre>';die();
-
 		/* Check if this is the right user */
-		if (md5($user['registered_timestamp']) != $_REQUEST['password'] || $user['username'] != $_REQUEST['username'])
+		if (md5($user['passwd']) != $_REQUEST['password'] || $user['member_name'] != $_REQUEST['username'])
 			die('-1'. PHP_EOL);
 
 		/* Print it the general info*/
 		print 'scras.version = 2.1'. PHP_EOL;
 		print 'user.usergroup.id = 0'. PHP_EOL;
-		print 'user.uid = '. $user['id'] . PHP_EOL;
+		print 'user.uid = '. $user['id_member'] . PHP_EOL;
 		print 'user.usergroup.can_login  = 1'. PHP_EOL;
 		print 'user.usergroup.idle_kick = 1'. PHP_EOL;
 
 		/* Permissions and settings for admin only */
-		print 'user.usergroup.is_admin = '. ($user['group_id'] == 1 ? '1' : '0') . PHP_EOL;
-		print 'user.usergroup.allow_html = '. ($user['group_id'] == 1 ? '1' : '0') . PHP_EOL;
+		print 'user.usergroup.is_admin = '. ($user['id_group'] == 1 ? '1' : '0') . PHP_EOL;
+		print 'user.usergroup.allow_html = '. ($user['id_group'] == 1 ? '1' : '0') . PHP_EOL;
 
 		/* Print the title */
-		if (!empty($user['group']))
-			print 'user.usergroup.title = "'. strip_tags($user['group']) .'"'. PHP_EOL;
+		if (!empty($user['member_group']))
+			print 'user.usergroup.title = "'. $user['member_group'] .'"'. PHP_EOL;
 
 		/* Set the icon */
-		if (!empty($user['group_id']))
-			switch ($user['group_id'])
+		if (!empty($user['id_group']))
+			switch ($user['id_group'])
 			{
 				case 1:
 					print 'user.usergroup.icon = 2'. PHP_EOL;
@@ -96,19 +91,37 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 					break;
 			}
 
-		/* Load the permisisons	 */
-		$permissions = $tools->loadPermissions();
+		else
+			print 'user.usergroup.icon = 0'. PHP_EOL;
+
+		/* Load the permissions	 */
+		$permissions = $tools->loadPermissions($user['additional_groups']);
 
 		/* Print specific permissions by user */
+		foreach (AddonChat::$permissions as $k)
+		{
+			/* Admins can  do everything */
+			if (!empty($user['id_group']) && $user['id_group'] == 1)
+				print 'user.usergroup.'. $k .' = 1'. PHP_EOL;
 
+			/* Lets check regular users */
+			else
+			{
+				if (in_array(AddonChat::$name .'_'. $k, $permissions))
+					print 'user.usergroup.'. $k .' = 1'. PHP_EOL;
+
+				else
+					print 'user.usergroup.'. $k .' = 0'. PHP_EOL;
+			}
+		}
 
 		/* Show the users avatar */
-		$template = "<table border=0 cellpadding=0 cellspacing=3><tr><td valign=top align=left><img width='48' src='" . $sourcedir . "/ChatAvatar.php?u=\$uid' /></td><td align=left valign=top>\$time \$username:<br>\$message</td></tr></table>";
+/* 		$template = "<table border=0 cellpadding=0 cellspacing=3><tr><td valign=top align=left><img width='48' src='" . $sourcedir . "/ChatAvatar.php?u=\$uid' /></td><td align=left valign=top>\$time \$username:<br>\$message</td></tr></table>";
 
 		print "chatpane.format.public.avatar = $template\n";
 		print "chatpane.format.action.avatar = $template\n";
 		print "chatpane.format.private.avatar = $template\n";
-		print "chatpane.format.recompile = true\n";
+		print "chatpane.format.recompile = true\n"; */
 
 		/* General settings */
 		if ($tools->enable('max_msg_length'))

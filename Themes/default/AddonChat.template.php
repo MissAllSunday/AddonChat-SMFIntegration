@@ -54,7 +54,7 @@
 							}
 							var addonchat_param = {
 								username: "'. $user_info['username'] .'",
-								password: "'. md5($user_info['registered_timestamp']) .'",
+								password: "'. md5($user_info['passwd']) .'",
 								autologin: true,
 								mycolor: "#000000",
 								myfont: "Verdana-PLAIN-13",
