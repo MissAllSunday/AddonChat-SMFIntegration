@@ -244,6 +244,38 @@ class AddonChatTools
 			return $txt[$this->name .'_'. $var];
 	}
 
+	/* Load user specific data */
+	public function loadData($user)
+	{
+		global $smcfunc;
+
+		$select_columns = '
+			IFNULL(lo.log_time, 0) AS is_online, mem.id_member, mem.member_name,
+			mem.real_name, mem.date_registered, mem.id_post_group, mem.additional_groups, mg.online_color AS member_group_color, IFNULL(mg.group_name, {string:blank_string}) AS member_group';
+		$select_tables = '
+			LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)';
+
+		$request = $smcFunc['db_query']('', '
+			SELECT' . $select_columns . '
+			FROM {db_prefix}members AS mem' . $select_tables . '
+			WHERE mem.member_name = {string:user}'),
+			array(
+				'user' => $user,
+			)
+		);
+
+		$return = array();
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$return = $row;
+
+		$smcFunc['db_free_result']($request);
+
+		return $return;
+	}
+
 	/* Custom method to check the users permissions */
 	public static function loadPermissions($user_groups)
 	{

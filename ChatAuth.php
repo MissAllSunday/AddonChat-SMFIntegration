@@ -30,14 +30,15 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 
 	global $memberContext, $sourcedir;
 
+	/* The external server needs a plain text file... */
+	header('Content-type: text/plain');
+
+	/* Call the tools */
 	$tools = AddonChat::tools();
 
 	/* The mod must be enable */
 	if (!$tools->enable('enable_general'))
 		die('-1'. PHP_EOL);
-
-	/* The external server needs a plain text file... */
-	header('Content-type: text/plain');
 
 	/* We need both username and password */
 	if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']) || empty($_REQUEST['username']) || empty($_REQUEST['password']))
@@ -55,6 +56,8 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	{
 		loadMemberContext($temp[0]);
 		$user = $memberContext[$temp[0]];
+		
+		echo '<pre>';print_r($user);echo '</pre>';die();
 
 		/* Check if this is the right user */
 		if (md5($user['registered_timestamp']) != $_REQUEST['password'] || $user['username'] != $_REQUEST['username'])
@@ -93,15 +96,11 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 					break;
 			}
 
-		/* Print specific permissions by user */
-		foreach (AddonChat::$permissions as $k)
-		{
-			if (allowedTo(AddonChat::$name .'_'. $k))
-				print 'user.usergroup.'. $k .' = 1'. PHP_EOL;
+		/* Load the permisisons	 */
+		$permissions = $tools->loadPermissions();
 
-			else
-				print 'user.usergroup.'. $k .' = 0'. PHP_EOL;
-		}
+		/* Print specific permissions by user */
+
 
 		/* Show the users avatar */
 		$template = "<table border=0 cellpadding=0 cellspacing=3><tr><td valign=top align=left><img width='48' src='" . $sourcedir . "/ChatAvatar.php?u=\$uid' /></td><td align=left valign=top>\$time \$username:<br>\$message</td></tr></table>";
