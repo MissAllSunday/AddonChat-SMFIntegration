@@ -28,7 +28,7 @@
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
-	global $memberContext, $sourcedir;
+	global $memberContext, $boardurl;
 
 	/* The external server needs a plain text file... */
 	header('Content-type: text/plain');
@@ -116,12 +116,12 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		}
 
 		/* Show the users avatar */
-/* 		$template = "<table border=0 cellpadding=0 cellspacing=3><tr><td valign=top align=left><img width='48' src='" . $sourcedir . "/ChatAvatar.php?u=\$uid' /></td><td align=left valign=top>\$time \$username:<br>\$message</td></tr></table>";
+		$template = "<table border=0 cellpadding=0 cellspacing=3><tr><td valign=top align=left><img width='48' src='" . $boardurl . "/ChatAvatar.php?uid=\$uid' /></td><td align=left valign=top>\$time \$username:<br>\$message</td></tr></table>";
 
 		print "chatpane.format.public.avatar = $template\n";
 		print "chatpane.format.action.avatar = $template\n";
 		print "chatpane.format.private.avatar = $template\n";
-		print "chatpane.format.recompile = true\n"; */
+		print "chatpane.format.recompile = true\n";
 
 		/* General settings */
 		if ($tools->enable('max_msg_length'))
