@@ -250,7 +250,7 @@ class AddonChat
 			'icon' => 'posts.gif',
 			'subsections' => array(
 				'general' => array($tools->getText('general_settings')),
-				/* 'look' => array($tools->getText('look_settings')) */
+				'look' => array($tools->getText('look_settings'))
 			),
 		);
 	}
@@ -277,7 +277,7 @@ class AddonChat
 			'description' => $tools->getText('admin_panel_desc'),
 			'tabs' => array(
 				'general' => array(),
-				/* 'look' => array() */
+				'look' => array()
 			),
 		);
 
@@ -286,7 +286,7 @@ class AddonChat
 
 		$subActions = array(
 			'general' => 'self::generalSettings',
-			/* 'look' => 'self::lookSettings' */
+			'look' => 'self::lookSettings'
 		);
 
 		loadGeneralSettingParameters($subActions, 'general');
@@ -316,16 +316,6 @@ class AddonChat
 			array('int', self::$name .'_number_id', 'size' => 36, 'subtext' => $tools->getText('number_id_sub')),
 
 			array('text', self::$name .'_pass', 'size' => 36, 'subtext' => $tools->getText('pass_sub')),
-			array('select', self::$name .'_menu_position', array(
-					'home' => $tools->getText('menu_home'),
-					'help' => $tools->getText('menu_help'),
-					'search' => $tools->getText('menu_search'),
-					'login' => $tools->getText('menu_login'),
-					'register' => $tools->getText('menu_register')
-				),
-				'subtext' => $tools->getText('menu_position_sub')
-			),
-			array('int', self::$name .'_max_msg_length', 'size' => 10, 'subtext' => $tools->getText('max_msg_length_sub')),
 		);
 
 		if ($return_config)
@@ -381,9 +371,21 @@ class AddonChat
 		/* We need this */
 		require_once($sourcedir . '/ManageServer.php');
 
+		$tools = self::tools();
+
 		/* Generate the settings */
 		$config_vars = array(
-			/* currently empty! */
+			array('check', self::$name .'_allow_avatar', 'subtext' => $tools->getText('allow_avatar_sub')),
+			array('int', self::$name .'_max_msg_length', 'size' => 10, 'subtext' => $tools->getText('max_msg_length_sub')),
+			array('select', self::$name .'_menu_position', array(
+					'home' => $tools->getText('menu_home'),
+					'help' => $tools->getText('menu_help'),
+					'search' => $tools->getText('menu_search'),
+					'login' => $tools->getText('menu_login'),
+					'register' => $tools->getText('menu_register')
+				),
+				'subtext' => $tools->getText('menu_position_sub')
+			),
 		);
 
 		if ($return_config)
