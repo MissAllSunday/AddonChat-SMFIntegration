@@ -36,7 +36,7 @@ if (!defined('SMF'))
  * @param string the Class name
  * @return boolean false if there is no file to load
  */
-function __autoload($class_name)
+function AddonChat_autoloader($class_name)
 {
 	global $sourcedir;
 
@@ -48,6 +48,8 @@ function __autoload($class_name)
 	else
 		return false;
 }
+
+spl_autoload_register('AddonChat_autoloader');
 
 /**
  * Wrapper function, SMF cannot handle static methods being called via a variable: $static_method();
