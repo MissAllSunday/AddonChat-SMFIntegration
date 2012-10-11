@@ -218,7 +218,14 @@ class AddonChat
 			'title' => $tools->getText('title_main'),
 			'href' => $scripturl . '?action=chat',
 			'show' => allowedTo(self::$name .'_see_chat'),
-			'sub_buttons' => array(),
+			'sub_buttons' => array(
+				'chat_admin' => array(
+					'title' => $tools->getText('settings_menu'),
+					'href' => $scripturl . '?action=admin;area=AddonChat',
+					'show' => allowedTo('admin_forum'),
+					'sub_buttons' => array(),
+				),
+			),
 		)),
 			array_slice($menu_buttons, $counter)
 		);

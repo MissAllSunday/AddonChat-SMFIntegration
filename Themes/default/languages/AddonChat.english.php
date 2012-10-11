@@ -28,6 +28,7 @@
 global $scripturl, $txt;
 
 $txt['AddonChat_title_main'] = 'Chat';
+$txt['AddonChat_settings_menu'] = 'Chat Settings';
 $txt['AddonChat_default_menu'] = 'Chat Integration';
 $txt['AddonChat_general_settings'] = 'Settings';
 $txt['AddonChat_look_settings'] = 'Look settings';

@@ -28,18 +28,24 @@
 if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	require_once(dirname(__FILE__) . '/SSI.php');
 
-	global $memberContext, $sourcedir, $smcFunc;
+	global $memberContext, $sourcedir, $smcFunc, $settings;
 
 	/* Call the tools */
 	$tools = AddonChat::tools();
 
 	/* The mod must be enable */
 	if (!$tools->enable('enable_general'))
-		die('-1'. PHP_EOL);
+	{
+		header('Location: '. $settings['default_theme_url']. '/images/chat_default_avatar.gif');
+		exit(0);
+	}
 
 	/* We need the username */
 	if (!isset($_REQUEST['uid']) || empty($_REQUEST['uid']))
-		die('-1'. PHP_EOL);
+	{
+		header('Location: '. $settings['default_theme_url']. '/images/chat_default_avatar.gif');
+		exit(0);
+	}
 
 	/* Cleaning */
 	$_REQUEST['uid'] = (int) $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['uid']));
@@ -57,8 +63,9 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		exit(0);
 	}
 
+	/* We need to provide a default avatar */
 	else
 	{
-		header('Location: http://missallsunday.com/avatars/Actors/Cameron_Diaz.jpg');
+		header('Location: '. $settings['default_theme_url']. '/images/chat_default_avatar.gif');
 		exit(0);
 	}
