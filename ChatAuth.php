@@ -94,7 +94,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		else
 			print 'user.usergroup.icon = 0'. PHP_EOL;
 
-		/* Load the permissions	 */
+		/* Load the permissions */
 		$permissions = $tools->loadPermissions($user['additional_groups']);
 
 		/* Print specific permissions by user */
@@ -116,12 +116,15 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		}
 
 		/* Show the users avatar */
-		$template = "<table border=0 cellpadding=0 cellspacing=3><tr><td valign=top align=left><img width='48' src='" . $boardurl . "/ChatAvatar.php?uid=\$uid' /></td><td align=left valign=top>\$time \$username:<br>\$message</td></tr></table>";
+		if ($tools->enable('allow_avatar'))
+		{
+			$template = "<table border=0 cellpadding=0 cellspacing=3><tr><td valign=top align=left><img width='48' src='" . $boardurl . "/ChatAvatar.php?uid=\$uid' /></td><td align=left valign=top>\$time \$username:<br>\$message</td></tr></table>";
 
-		print "chatpane.format.public.avatar = $template\n";
-		print "chatpane.format.action.avatar = $template\n";
-		print "chatpane.format.private.avatar = $template\n";
-		print "chatpane.format.recompile = true\n";
+			print "chatpane.format.public.avatar = $template\n";
+			print "chatpane.format.action.avatar = $template\n";
+			print "chatpane.format.private.avatar = $template\n";
+			print "chatpane.format.recompile = true\n";
+		}
 
 		/* General settings */
 		if ($tools->enable('max_msg_length'))
