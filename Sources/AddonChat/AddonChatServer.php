@@ -41,7 +41,7 @@ class AddonChatServer extends Addonchat
 	 *
 	 * @access public
 	 * @global string $sourcedir the path to the forum sources directory
-	 * @global array $smcFunc holds the SMD DB layer
+	 * @global array $smcFunc holds the SMF DB layer
 	 * @return void
 	 */
 	public function __construct()
@@ -78,7 +78,7 @@ class AddonChatServer extends Addonchat
 		return fetch_web_data($url);
 	}
 
-	/*
+	/**
 	 * Calls the external server to retrieve info about who is chatting
 	 *
 	 * Uses the SMF cache system
@@ -124,11 +124,12 @@ class AddonChatServer extends Addonchat
 			/* Load the users info */
 			$ids = loadMemberData($usernames, true, 'normal');
 
-			foreach ($ids as $i)
-			{
-				loadMemberContext($i);
-				$user[$i] = $memberContext[$i];
-			}
+			if (!empty($ids) && is_array($ids))
+				foreach ($ids as $i)
+				{
+					loadMemberContext($i);
+					$user[$i] = $memberContext[$i];
+				}
 
 			/* Append the data */
 			$return['users'] = $user;
@@ -144,7 +145,7 @@ class AddonChatServer extends Addonchat
 		return $return;
 	}
 
-	/*
+	/**
 	 * Calls the external server to retrieve the server number and client ID
 	 *
 	 * This will be done just 1 time, the function will store the values on the DB
