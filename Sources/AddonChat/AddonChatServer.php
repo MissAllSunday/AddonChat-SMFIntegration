@@ -155,18 +155,15 @@ class AddonChatServer extends Addonchat
 	 */
 	public function getAccount()
 	{
-		/* Set what we need */
-		$tools = $this->_settings;
-
 		/* We need the password and the ID, lets check if we have it, if not tell the user to store it first */
-		if (!$tools->enable('pass') || !$tools->enable('number_id'))
+		if (!$this->_settings->enable('pass') || !$this->_settings->enable('number_id'))
 			fatal_lang_error(parent::$name .'_no_pass_set', false);
 
 		/* Lets md5 the pass */
-		$pass = md5($tools->getSetting('pass'));
+		$pass = md5($this->_settings->getSetting('pass'));
 
 		/* Build the url */
-		$url = $this->serverUrl. '?id='. $tools->getSetting('number_id') .'&md5pw='. $pass;
+		$url = $this->serverUrl. '?id='. $this->_settings->getSetting('number_id') .'&md5pw='. $pass;
 
 		/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
 		$data = $this->fetch_web_data($url);
