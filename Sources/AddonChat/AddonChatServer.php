@@ -106,7 +106,7 @@ class AddonChatServer extends Addonchat
 
 			/* Oops, something went wrong, tell the user to try later */
 			if ($data == null)
-				return $return = array();
+				return false;
 
 			/* Get 1 user per line */
 			$temp = explode("\n", $data);
