@@ -205,6 +205,9 @@ class AddonChat
 		if (!$tools->enable('enable_general'))
 			return;
 
+		$connect = new AddonChatServer();
+		$whos = $connect->whosChatting();
+
 		$insert = $tools->enable('menu_position') ? $tools->getSetting('menu_position') : 'home';
 
 		/* Let's add our button next to the user's selection...
@@ -217,7 +220,7 @@ class AddonChat
 		$menu_buttons = array_merge(
 			array_slice($menu_buttons, 0, $counter),
 			array('chat' => array(
-			'title' => $tools->getText('title_main'),
+			'title' => $tools->getText('title_main') . ' ['. (!is_array($whos) ? '0' : $whos['number']) .']',
 			'href' => $scripturl . '?action=chat',
 			'show' => allowedTo(self::$name .'_see_chat'),
 			'sub_buttons' => array(

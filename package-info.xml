@@ -27,5 +27,4 @@
 		<remove-file name="$themedir/AddonChat.template.php" />
 		<remove-file name="$languagedir/AddonChat.english.php" />
 	</uninstall>
-
 </package-info>

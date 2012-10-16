@@ -85,7 +85,7 @@ class AddonChatServer extends Addonchat
 	 * @access public
 	 * @return array An array containing the fetched values
 	 */
-	public function whoChatting()
+	public function whosChatting()
 	{
 		global $memberContext;
 
@@ -106,7 +106,7 @@ class AddonChatServer extends Addonchat
 
 			/* Oops, something went wrong, tell the user to try later */
 			if ($data == null)
-				fatal_lang_error(parent::$name .'_error_fetching_server', false);
+				return $return = array();
 
 			/* Get 1 user per line */
 			$temp = explode("\n", $data);
