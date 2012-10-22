@@ -226,7 +226,7 @@ class AddonChat
 			'sub_buttons' => array(
 				'chat_admin' => array(
 					'title' => $tools->getText('settings_menu'),
-					'href' => $scripturl . '?action=admin;area=AddonChat',
+					'href' => $scripturl . '?action=admin;area='. self::$name,
 					'show' => allowedTo('admin_forum'),
 					'sub_buttons' => array(),
 				),
@@ -333,7 +333,7 @@ class AddonChat
 		/* Get the global settings */
 		$gSettings = $tools->globalSettingAll();
 
-		/* If the user has sucesfully called the external site, lets tell them the next steps */
+		/* If the user has successfully called the external site, lets tell them the next steps */
 		if (!empty($gSettings))
 			$context['settings_message'] =  sprintf($tools->getText('settings_message_true'), $gSettings['control_panel_login'], $boardurl .'/ChatAuth.php');
 
@@ -346,7 +346,7 @@ class AddonChat
 			$connect = new AddonChatServer();
 			$connect->getAccount();
 
-			redirectexit('action=admin;area=AddonChat');
+			redirectexit('action=admin;area='. self::$name);
 		}
 
 		if (isset($_GET['save']))
@@ -355,7 +355,7 @@ class AddonChat
 			checkSession();
 
 			saveDBSettings($config_vars);
-			redirectexit('action=admin;area=AddonChat');
+			redirectexit('action=admin;area='. self::$name);
 		}
 
 		prepareDBSettingContext($config_vars);
@@ -378,6 +378,10 @@ class AddonChat
 
 		$tools = self::tools();
 
+		/* Set some settings for the page */
+		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=look;save';
+		$context['page_title'] = $tools->getText('default_menu');
+
 		/* Generate the settings */
 		$config_vars = array(
 			array('check', self::$name .'_allow_avatar', 'subtext' => $tools->getText('allow_avatar_sub')),
@@ -398,7 +402,7 @@ class AddonChat
 
 		/* Page settings */
 		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=look;save';
-		$context['page_title'] = self::tools()->getText('default_menu');
+		$context['page_title'] = $tools->getText('default_menu');
 
 		/* Save */
 		if (isset($_GET['save']))
