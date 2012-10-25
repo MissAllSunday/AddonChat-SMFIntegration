@@ -270,7 +270,7 @@ class AddonChat
 		$menu_buttons = array_merge(
 			array_slice($menu_buttons, 0, $counter),
 			array('chat' => array(
-			'title' => $tools->getText('title_main') . ' ['. (!is_array($whos) ? '0' : $whos['number']) .']',
+			'title' => $tools->getText('title_main') . ($tools->enable('show_chatusers_menu') ? ' ['. (!is_array($whos) ? '0' : $whos['number']) .']' : ''),
 			'href' => $scripturl . '?action=chat',
 			'show' => allowedTo(self::$name .'_see_chat'),
 			'sub_buttons' => array(
