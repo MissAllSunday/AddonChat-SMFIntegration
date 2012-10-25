@@ -436,6 +436,7 @@ class AddonChat
 		$config_vars = array(
 			array('check', self::$name .'_allow_avatar', 'subtext' => $tools->getText('allow_avatar_sub')),
 			array('check', self::$name .'_show_chatusers_menu', 'subtext' => $tools->getText('show_chatusers_menu_sub')),
+			array('check', self::$name .'_show_chatusers_boardIndex', 'subtext' => $tools->getText('show_chatusers_boardIndex_sub')),
 			array('int', self::$name .'_max_msg_length', 'size' => 10, 'subtext' => $tools->getText('max_msg_length_sub')),
 			array('select', self::$name .'_menu_position', array(
 					'home' => $tools->getText('menu_home'),
