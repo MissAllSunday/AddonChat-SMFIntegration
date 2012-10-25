@@ -122,7 +122,7 @@ class AddonChatServer extends Addonchat
 						$usernames[] = $t[1];
 
 			/* Load the users info */
-			$ids = loadMemberData($usernames, true, 'minimal');
+			$ids = loadMemberData($usernames, true, 'normal');
 			$user = array();
 
 			if (!empty($ids) && is_array($ids))
