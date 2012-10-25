@@ -29,7 +29,17 @@
 	{
 		global $context, $scripturl, $modSettings, $user_info;
 
-		echo '
+		/* If there is any issue, print it, but only for admins */
+		if (!empty($context[AddonChat::$name]['issue']) && $context['user']['is_admin'])
+			echo '<div class="information">'. $context[AddonChat::$name]['issue'] .'</div>';
+
+		/* There are issues but you aren't an admin, you don't get any goodies... */
+		elseif (!empty($context[AddonChat::$name]['issue']) && !$context['user']['is_admin'])
+			echo '<div class="information">'. $context[AddonChat::$name]['tools']->getText('issues_guest') .'</div>';
+
+		/* We are good to go */
+		else
+			echo '
 			<div class="cat_bar">
 				<h3 class="catbg">
 					<span class="ie6_header floatleft">
