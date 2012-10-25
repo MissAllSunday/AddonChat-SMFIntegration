@@ -129,7 +129,7 @@ class AddonChatServer extends Addonchat
 				foreach ($ids as $i)
 				{
 					loadMemberContext($i);
-					$user[$i] = $memberContext[$i];
+					$user[$i] = $memberContext[$i]['link'];
 				}
 
 			/* Append the data */

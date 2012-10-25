@@ -5,11 +5,32 @@
 	<id>Suki:AddonChat</id>
 	<version>1.0</version>
 
-	<!-- <file name="$sourcedir/.php">
+	<file name="$themedir/BoardIndex.template.php">
 		<operation>
-			<search position="replace"><![CDATA[]]></search>
-			<add><![CDATA[]]></add>
+			<search position="replace"><![CDATA[// "Users online" - in order of activity.]]></search>
+			<add><![CDATA[/*  Show the users on chat - AddonChat Integration mod */
+	if (AddonChat::tools()->enable('show_chatusers_boardIndex'))
+	{
+		/* Get the users */
+		$connectChat = new AddonChatServer();
+		$whosChat = $connectChat->whosChatting();
+
+		if (!empty($whosChat['users']))
+			echo '
+			<div class="title_barIC">
+				<h4 class="titlebg">
+					<span class="ie6_header floatleft">
+						<img class="icon" src="', $settings['images_url'], '/icons/online.gif', '" alt="', $txt['online_users'], '" /> ', AddonChat::tools()->getText('users_active') ,'
+					</span>
+				</h4>
+			</div>
+			<p>
+				', implode(', ', $whosChat['users']) ,'
+			</p>';
+	}
+
+	// "Users online" - in order of activity.]]></add>
 		</operation>
-	</file> -->
+	</file>
 
 </modification>
