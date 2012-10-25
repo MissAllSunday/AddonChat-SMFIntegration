@@ -132,6 +132,7 @@ class AddonChat
 		if (empty($gSettings))
 			return $returnText ? $tools->getText('connect_with_server') : true;
 
+		/* We have data, lets do some more checks */
 		elseif (!empty($gSettings) && is_array($gSettings))
 		{
 			/* You should be able to use RAS */
@@ -149,7 +150,7 @@ class AddonChat
 	}
 
 	/**
-	 * The main funciton that loads the chat inside the action=chat page
+	 * The main function that loads the chat inside the action=chat page
 	 *
 	 * @access public
 	 * @global array $context An array used to pass variables to the template
@@ -176,25 +177,21 @@ class AddonChat
 		$context['canonical_url'] = $scripturl . '?action=chat';
 		$context['sub_template'] = 'addonChat_main';
 		$context['robot_no_index'] = true;
-
-		/* Get all the global settings */
-		$context[self::$name]['global_settings'] = $tools->globalSettingAll();
 		$context[self::$name]['tools'] = $tools;
+		$context[self::$name]['issue'] '';
 
-		/* By default this are empty */
-		$context[self::$name]['connect_with_server'] = '';
-		$context[self::$name]['enable_RAS'] = '';
+		/* Check if we can use RAS */
+		$checkRAS = self::enableRAS(true);
 
-		/* You must be connected to the chat server */
-		if (empty($context[self::$name]['global_settings']))
-			$context[self::$name]['connect_with_server'] = $tools->getText('connect_with_server');
+		/* We got some issues, pass them to the template */
+		if (!empty($checkRAS))
+			$context[self::$name]['issue'] = $checkRAS;
 
-		/* Fill out important data */
+		/* We are good to go */
 		else
 		{
-			/* If RAS is not enable, tell the admin (s)he needs to enable it first */
-			if (empty($context[self::$name]['global_settings']['remote_auth_enable']))
-				$context[self::$name]['enable_RAS'] = sprintf($tools->getText('enable_RAS'), $context[self::$name]['global_settings']['control_panel_login'], $boardurl .'/ChatAuth.php');
+			/* Get all the global settings */
+			$context[self::$name]['global_settings'] = $tools->globalSettingAll();
 
 			/* Server_id needs to be an int too */
 			$context[self::$name]['global_settings']['server_id'] = preg_replace('[\D]', '', $context[AddonChat::$name]['tools']->globalSetting('server_name'));
