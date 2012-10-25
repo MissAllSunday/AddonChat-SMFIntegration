@@ -115,7 +115,6 @@ class AddonChat
 	 * Checks for RAS, it starts with a basic check for any settings, then check if you are capable of using RAS and lastly if you had enable it
 	 *
 	 * @access public
-	 * @global array $context A global array to pass data
 	 * @global string $boardurl the forum url without index.php
 	 * @static
 	 * @param boolean if true, the method will return a text string depending on the error, if false, it will only return a boolean
@@ -123,7 +122,7 @@ class AddonChat
 	 */
 	public static function enableRAS($returnText = false)
 	{
-		global $context, $boardurl;
+		global $boardurl;
 
 		/* Load what we need */
 		$tools = self::tools();
@@ -141,7 +140,7 @@ class AddonChat
 
 			/* If you are capable of using RAS, you must enable it first */
 			if (empty($gSettings['remote_auth_enable']))
-				return $returnText ? sprintf($tools->getText('enable_RAS'), $context[self::$name]['global_settings']['control_panel_login'], $boardurl .'/ChatAuth.php') : true;
+				return $returnText ? sprintf($tools->getText('enable_RAS'), $gSettings['control_panel_login'], $boardurl .'/ChatAuth.php') : true;
 		}
 
 		/* Its all good :)  */
