@@ -69,6 +69,18 @@ $txt['AddonChat_allow_avatar_sub'] = 'If enable, the user\'s avatars will be use
 $txt['AddonChat_max_msg_length'] = 'Maximum message length in characters';
 $txt['AddonChat_max_msg_length_sub'] = 'This counts spaces as well.';
 $txt['AddonChat_no_guest'] = 'I\'m sorry, guest cannot see the chat';
+$txt['AddonChat_enable_RAS'] = 'You need to enable RAS (Remote authentication protocol) from your chat admin panel before you can use this <p />Follow the steps below to enable remote authentication for your AddonChat chat room:<br />
+<ol>
+<li><a href="%1$s" target="_blank">Login to your AddonChat Customer Account</a></li>
+<li>Enter the AddonChat Account Control Panel for the account that you wish to enable remote authentication</li>
+<li>Select the Settings tab from within the AdodnChat Account Control Panel</li>
+<li>Select the Site Integration link in the Settings submenu</li>
+<li>Select the Remote Authentication link in the Site Integration sub-menu</li>
+<li>Set Enable Remote Authentication to Yes</li>
+<li>Enter the full URL (beginning with http://) to your authentication script next to Authentication URL, your unique full url is: <strong>%2$s</strong></li>
+<li>Click the "Click Here to Save Changes" button</li>
+</ol>';
+$txt['AddonChat_connect_with_server'] = 'You need to connect with the external chat server first, go to the <a href="'. $scripturl. '?action=admin;area=AddonChat" target="self">Chat admin panel</a> and follow the instructions over there.';
 
 /* Permissions strings */
 $txt['permissiongroup_simple_AddonChat_per_simple'] = 'AddonChat mod permissions';

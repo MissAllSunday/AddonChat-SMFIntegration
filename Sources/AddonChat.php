@@ -144,8 +144,24 @@ class AddonChat
 		$context[self::$name]['global_settings'] = $tools->globalSettingAll();
 		$context[self::$name]['tools'] = $tools;
 
-		/* Server_id needs to be an int too */
-		$context[self::$name]['global_settings']['server_id'] = preg_replace('[\D]', '', $context[AddonChat::$name]['tools']->globalSetting('server_name'));
+		/* By default this are empty */
+		$context[self::$name]['connect_with_server'] = '';
+		$context[self::$name]['enable_RAS'] = '';
+
+		/* You must be connected to the chat server */
+		if (empty($context[self::$name]['global_settings']))
+			$context[self::$name]['connect_with_server'] = sprintf($tools->getText('connect_with_server'), );
+
+		/* Fill out important data */
+		else
+		{
+			/* If RAS is not enable, tell the admin (s)he needs to enable it first */
+			if (empty($context[self::$name]['global_settings']['remote_auth_enable']))
+				$context[self::$name]['enable_RAS'] = sprintf($tools->getText('enable_RAS'), $context[self::$name]['global_settings']['control_panel_login'], $boardurl .'/ChatAuth.php');
+
+			/* Server_id needs to be an int too */
+			$context[self::$name]['global_settings']['server_id'] = preg_replace('[\D]', '', $context[AddonChat::$name]['tools']->globalSetting('server_name'));
+		}
 	}
 
 	/**

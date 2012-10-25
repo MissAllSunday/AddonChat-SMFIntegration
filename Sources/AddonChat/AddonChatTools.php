@@ -68,6 +68,12 @@ class AddonChatTools
 	protected $_pattern;
 
 	/**
+	 * @var array The DB tables used by the script
+	 * @access protected
+	 */
+	protected static $_dbTables = array('edition_code', 'modules', 'remote_auth_capable', 'full_service', 'expiration_date', 'remote_auth_enable', 'remote_auth_url', 'server_name', 'tcp_port', 'control_panel_login', 'chat_title', 'product_code', 'customer_code');
+
+	/**
 	 * Initialize the extract() method and sets the pattern property using $name's value.
 	 *
 	 * @access protected
@@ -137,16 +143,23 @@ class AddonChatTools
 		if (($this->gSetting = cache_get_data(AddonChat::$name .':gSettings', 600)) == null)
 		{
 			$query = $smcFunc['db_query']('', '
-				SELECT *
+				SELECT '. implode(',', self::$_dbTables) .'
 				FROM {db_prefix}'. AddonChat::$_dbTableName,
 				array()
 			);
 
 			while($row = $smcFunc['db_fetch_assoc']($query))
-				$this->gSetting = $row;
+			{
+				if (!empty($row))
+					$this->gSetting = $row;
 
-			/* Cache this beauty */
-			cache_put_data(AddonChat::$name .':gSettings', $this->gSetting, 600);
+				else
+					$this->gSetting = '';
+			}
+
+			/* Cache this beauty only if there is something worth to be saved */
+			if (!empty($this->gSetting))
+				cache_put_data(AddonChat::$name .':gSettings', $this->gSetting, 600);
 		}
 	}
 
