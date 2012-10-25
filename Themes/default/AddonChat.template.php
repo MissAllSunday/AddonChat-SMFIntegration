@@ -66,8 +66,6 @@
 								username: "'. $user_info['username'] .'",
 								password: "'. md5($user_info['passwd']) .'",
 								autologin: true,
-								mycolor: "#000000",
-								myfont: "Verdana-PLAIN-13",
 								url_exit_enable: true,
 								url_exit: "'. $scripturl .'"
 							}
@@ -83,5 +81,5 @@
 			</div>
 			<span class="lowerframe">
 				<span></span>
-			</span><br />';
+			</span>';
 	}

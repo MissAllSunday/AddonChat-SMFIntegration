@@ -40,6 +40,13 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		exit(0);
 	}
 
+	/* You must be capable of using RAS and it must be enable */
+	if (AddonChat::enableRAS() == true)
+	{
+		header('Location: '. $settings['default_theme_url']. '/images/chat_default_avatar.gif');
+		exit(0);
+	}
+
 	/* We need the username */
 	if (!isset($_REQUEST['uid']) || empty($_REQUEST['uid']))
 	{

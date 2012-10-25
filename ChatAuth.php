@@ -42,11 +42,15 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 
 	/* We need both username and password */
 	if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']) || empty($_REQUEST['username']) || empty($_REQUEST['password']))
-		 die('-1'. PHP_EOL);
+		die('-1'. PHP_EOL);
 
 	/* Cleaning */
 	$_REQUEST['username'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['username']));
 	$_REQUEST['password'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['password']));
+
+	/* You must be capable of using RAS and it must be enable */
+	if (AddonChat::enableRAS() == true)
+		die('-1'. PHP_EOL);
 
 	/* Load the users data */
 	$user = $tools->loadData($_REQUEST['username']);

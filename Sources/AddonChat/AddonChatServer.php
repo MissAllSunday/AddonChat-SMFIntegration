@@ -95,10 +95,6 @@ class AddonChatServer extends Addonchat
 		/* Set this as an empty array */
 		$return = array();
 
-		/* RAS must be enable, sorry */
-		if (empty($gSettings['remote_auth_enable']))
-			return false;
-
 		/* Built the url */
 		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . $this->_settings->getSetting('number_id') . '&port=' . $gSettings['tcp_port'] .'&roompw=' . md5($this->_settings->getSetting('pass'));
 
@@ -126,7 +122,7 @@ class AddonChatServer extends Addonchat
 						$usernames[] = $t[1];
 
 			/* Load the users info */
-			$ids = loadMemberData($usernames, true, 'normal');
+			$ids = loadMemberData($usernames, true, 'minimal');
 			$user = array();
 
 			if (!empty($ids) && is_array($ids))
