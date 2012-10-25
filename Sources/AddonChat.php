@@ -178,7 +178,7 @@ class AddonChat
 		$context['sub_template'] = 'addonChat_main';
 		$context['robot_no_index'] = true;
 		$context[self::$name]['tools'] = $tools;
-		$context[self::$name]['issue'] false;
+		$context[self::$name]['issue'] = false;
 
 		/* Check if we can use RAS */
 		$checkRAS = self::enableRAS(true);
