@@ -112,6 +112,44 @@ class AddonChat
 	}
 
 	/**
+	 * Checks for RAS, it starts with a basic check for any settings, then check if you are capable of using RAS and lastly if you had enable it
+	 *
+	 * @access public
+	 * @global array $context A global array to pass data
+	 * @global string $boardurl the forum url without index.php
+	 * @static
+	 * @param boolean if true, the method will return a text string depending on the error, if false, it will only return a boolean
+	 * @return mixed either a boolean or a string
+	 */
+	public static function enableRAS($returnText = false)
+	{
+		global $context, $boardurl;
+
+		/* Load what we need */
+		$tools = self::tools();
+		$gSettings = $tools->globalSettingAll();
+
+		/* If there is no data, tell the user to connect to the server first */
+		if (empty($gSettings))
+			return $returnText ? $tools->getText('connect_with_server') : true;
+
+		elseif (!empty($gSettings) && is_array($gSettings))
+		{
+			/* You should be able to use RAS */
+			if (empty($gSettings['remote_auth_capable']))
+				return $returnText ? $tools->getText('remote_auth_capable') : true;
+
+			/* If you are capable of using RAS, you must enable it first */
+			if (empty($gSettings['remote_auth_enable']))
+				return $returnText ? sprintf($tools->getText('enable_RAS'), $context[self::$name]['global_settings']['control_panel_login'], $boardurl .'/ChatAuth.php') : true;
+		}
+
+		/* Its all good :)  */
+		else
+			return false;
+	}
+
+	/**
 	 * The main funciton that loads the chat inside the action=chat page
 	 *
 	 * @access public
@@ -150,7 +188,7 @@ class AddonChat
 
 		/* You must be connected to the chat server */
 		if (empty($context[self::$name]['global_settings']))
-			$context[self::$name]['connect_with_server'] = sprintf($tools->getText('connect_with_server'), );
+			$context[self::$name]['connect_with_server'] = $tools->getText('connect_with_server');
 
 		/* Fill out important data */
 		else
