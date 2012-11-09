@@ -71,11 +71,31 @@ class AddonChatServer extends Addonchat
 		if (empty($url))
 			return false;
 
-		/* Requires a function in a source file far far away... */
-		require_once($this->_sourcedir .'/Subs-Package.php');
+		/* I can haz cURL? */
+		if (function_exists ('curl_init'))
+		{
+			$ch = curl_init();
 
-		/* Send the result directly, we are gonna handle it on every case */
-		return fetch_web_data($url);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_GET, 1);
+			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			$content = curl_exec($ch);
+			curl_close($ch);
+
+			/* Send the data directly, evil, I'm evil! :P */
+			return $content;
+		}
+
+		/* Good old SMF's fetch_web_data to the rescue! */
+		else
+		{
+			/* Requires a function in a source file far far away... */
+			require_once($this->_sourcedir .'/Subs-Package.php');
+
+			/* Send the result directly, we are gonna handle it on every case */
+			return fetch_web_data($url);
+		}
 	}
 
 	/**
