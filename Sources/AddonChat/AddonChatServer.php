@@ -77,8 +77,7 @@ class AddonChatServer extends Addonchat
 			$ch = curl_init();
 
 			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_GET, 1);
-			curl_setopt($ch, CURLOPT_HEADER, 0);
+			curl_setopt($ch, CURLOPT_HEADER, false);
 			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 			$content = curl_exec($ch);
 			curl_close($ch);
@@ -197,7 +196,7 @@ class AddonChatServer extends Addonchat
 			fatal_lang_error(parent::$name .'_error_fetching_server', false);
 
 		/* We got something */
-		$data = explode(PHP_EOL, $data);
+		$data = explode("\n", $data);
 
 		/* Cleaning */
 		foreach ($data as $key => $value)
@@ -208,89 +207,86 @@ class AddonChatServer extends Addonchat
 		if ($data[0] == '-1')
 			fatal_lang_error(parent::$name .'_error_from_server', false, array($data[2]));
 
-		/* Make sure the data is what is supposed to be, $data[1] must match this regex: /\((.+)\)/ */
-		if (preg_match('/\((.+)\)/', $data[1]))
+		/* Make a quick query to see if theres data already saved */
+		$query = $this->_smcFunc['db_query']('', '
+			SELECT customer_code
+			FROM {db_prefix}'. parent::$_dbTableName .'',
+			array()
+		);
+
+		while($row = $this->_smcFunc['db_fetch_assoc']($query))
+			$result = $row;
+
+		$this->_smcFunc['db_free_result']($query);
+
+		/* The following data will be converted to an int */
+		$data[0] = (int) $data[0];
+		$data[2] = (int) $data[2];
+		$data[5] = (int) $data[5];
+
+		/* There is, so make an update */
+		if (!empty($result))
 		{
-			/* Make a quick query to see if theres data already saved */
+			/* Update the cache */
+			$tools->killCache();
+
 			$query = $this->_smcFunc['db_query']('', '
-				SELECT customer_code
-				FROM {db_prefix}'. parent::$_dbTableName .'',
-				array()
+				UPDATE {db_prefix}'. parent::$_dbTableName .'
+				SET edition_code = {int:edition_code},
+					modules = {string:modules},
+					remote_auth_capable = {int:remote_auth_capable},
+					full_service = {string:full_service},
+					expiration_date = {string:expiration_date},
+					remote_auth_enable = {int:remote_auth_enable},
+					remote_auth_url = {string:remote_auth_url},
+					server_name = {string:server_name},
+					tcp_port = {string:tcp_port},
+					control_panel_login = {string:control_panel_login},
+					chat_title = {string:chat_title},
+					product_code = {string:product_code},
+					customer_code = {string:customer_code}',
+				array(
+					'edition_code' =>$data[0],
+					'modules' => $data[1],
+					'remote_auth_capable' => $data[2],
+					'full_service' => $data[3],
+					'expiration_date' => $data[4],
+					'remote_auth_enable' => $data[5],
+					'remote_auth_url' => $data[6],
+					'server_name' => $data[7],
+					'tcp_port' => $data[8],
+					'control_panel_login' => $data[9],
+					'chat_title' => $data[10],
+					'product_code' => $data[11],
+					'customer_code' => $data[12],
+				)
+			);
+		}
+
+		/* No data, create the rows */
+		else
+			$this->_smcFunc['db_insert']('replace',
+				'{db_prefix}'. parent::$_dbTableName,
+				array(
+						'edition_code' => 'int',
+						'modules' => 'string',
+						'remote_auth_capable' => 'int',
+						'full_service' => 'string',
+						'expiration_date' => 'string',
+						'remote_auth_enable' => 'int',
+						'remote_auth_url' =>'string',
+						'server_name' => 'string',
+						'tcp_port' => 'string',
+						'control_panel_login' => 'string',
+						'chat_title' => 'string',
+						'product_code' => 'string',
+						'customer_code' => 'string',
+				),
+				$data,
+				array(
+					'customer_code',
+				)
 			);
 
-			while($row = $this->_smcFunc['db_fetch_assoc']($query))
-				$result = $row;
-
-			$this->_smcFunc['db_free_result']($query);
-
-			/* The following data will be converted to an int */
-			$data[0] = (int) $data[0];
-			$data[2] = (int) $data[2];
-			$data[5] = (int) $data[5];
-
-			/* There is, so make an update */
-			if (!empty($result))
-			{
-				/* Update the cache */
-				$tools->killCache();
-
-				$query = $this->_smcFunc['db_query']('', '
-					UPDATE {db_prefix}'. parent::$_dbTableName .'
-					SET edition_code = {int:edition_code},
-						modules = {string:modules},
-						remote_auth_capable = {int:remote_auth_capable},
-						full_service = {string:full_service},
-						expiration_date = {string:expiration_date},
-						remote_auth_enable = {int:remote_auth_enable},
-						remote_auth_url = {string:remote_auth_url},
-						server_name = {string:server_name},
-						tcp_port = {string:tcp_port},
-						control_panel_login = {string:control_panel_login},
-						chat_title = {string:chat_title},
-						product_code = {string:product_code},
-						customer_code = {string:customer_code}',
-					array(
-						'edition_code' =>$data[0],
-						'modules' => $data[1],
-						'remote_auth_capable' => $data[2],
-						'full_service' => $data[3],
-						'expiration_date' => $data[4],
-						'remote_auth_enable' => $data[5],
-						'remote_auth_url' => $data[6],
-						'server_name' => $data[7],
-						'tcp_port' => $data[8],
-						'control_panel_login' => $data[9],
-						'chat_title' => $data[10],
-						'product_code' => $data[11],
-						'customer_code' => $data[12],
-					)
-				);
-			}
-
-			/* No data, create the rows */
-			else
-				$this->_smcFunc['db_insert']('replace',
-					'{db_prefix}'. parent::$_dbTableName,
-					array(
-							'edition_code' => 'int',
-							'modules' => 'string',
-							'remote_auth_capable' => 'int',
-							'full_service' => 'string',
-							'expiration_date' => 'string',
-							'remote_auth_enable' => 'int',
-							'remote_auth_url' =>'string',
-							'server_name' => 'string',
-							'tcp_port' => 'string',
-							'control_panel_login' => 'string',
-							'chat_title' => 'string',
-							'product_code' => 'string',
-							'customer_code' => 'string',
-					),
-					$data,
-					array(
-						'customer_code',
-					)
-				);
-		}
 	}
 }
