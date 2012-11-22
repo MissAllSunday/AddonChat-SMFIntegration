@@ -30,7 +30,7 @@
 					echo $chatUsers['link'] ,' on ', $chatUsers['room'] ,', ';
 
 			else
-				echo AddonChat::tools()->getText('users__no_active');
+				echo AddonChat::tools()->getText('users_no_active');
 
 			echo '</p>';
 	}
