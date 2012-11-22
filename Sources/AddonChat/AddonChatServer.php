@@ -122,7 +122,7 @@ class AddonChatServer extends Addonchat
 		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . $this->_settings->getSetting('number_id') . '&port=' . $gSettings['tcp_port'] .'&roompw=' . md5($this->_settings->getSetting('pass'));
 
 		/* Use the cache */
-		if (($return = cache_get_data(parent::$name .':whoschatting', 10)) == null)
+		if (($return = cache_get_data(parent::$name .':whoschatting', 30)) == null)
 		{
 			/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
 			$data = $this->fetch_web_data($url);
