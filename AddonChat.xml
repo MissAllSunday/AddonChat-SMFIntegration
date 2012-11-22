@@ -15,7 +15,6 @@
 		$connectChat = new AddonChatServer();
 		$whosChat = $connectChat->whosChatting();
 
-		if (!empty($whosChat['users']))
 			echo '
 			<div class="title_barIC">
 				<h4 class="titlebg">
@@ -24,9 +23,16 @@
 					</span>
 				</h4>
 			</div>
-			<p>
-				', implode(', ', $whosChat['users']) ,'
-			</p>';
+			<p class="inline smalltext">';
+
+			if (!empty($whosChat['users']))
+				foreach($whosChat['users'] as $chatUsers)
+					echo $chatUsers['link'] ,' on ', $chatUsers['room'] ,', ';
+
+			else
+				echo AddonChat::tools()->getText('users__no_active');
+
+			echo '</p>';
 	}
 
 	// "Users online" - in order of activity.]]></add>

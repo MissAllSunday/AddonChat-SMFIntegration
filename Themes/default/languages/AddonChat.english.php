@@ -86,8 +86,9 @@ $txt['AddonChat_enable_RAS'] = 'You need to enable RAS (Remote authentication pr
 </ol>';
 $txt['AddonChat_connect_with_server'] = 'You need to connect with the external chat server first, go to the <a href="'. $scripturl. '?action=admin;area=AddonChat" target="self">Chat admin panel</a> and follow the instructions over there.';
 $txt['AddonChat_remote_auth_capable'] = 'Your current chat edition doesn\'t allow RAS, you need to be able to use RAS to use this integration script.';
-$txt['AddonChat_issues_guest'] = 'there are some issues with the chat, please come back later.';
-$txt['AddonChat_users_active'] = 'User(s) active in chat room:';
+$txt['AddonChat_issues_guest'] = 'There are some issues with the chat, please come back later.';
+$txt['AddonChat_users_active'] = 'User(s) active in chat room: ';
+$txt['AddonChat_users_no_active'] = 'There are no active users in the chat right now';
 
 /* Permissions strings */
 $txt['permissiongroup_simple_AddonChat_per_simple'] = 'AddonChat mod permissions';
