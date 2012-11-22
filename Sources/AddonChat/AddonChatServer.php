@@ -200,8 +200,13 @@ class AddonChatServer extends Addonchat
 
 		/* Cleaning */
 		foreach ($data as $key => $value)
+		{
 			if (trim($value) == '')
 				unset($data[$key]);
+
+			else
+				$data[$key] = trim($value);
+		}
 
 		/* The server says no */
 		if ($data[0] == '-1')
@@ -228,7 +233,7 @@ class AddonChatServer extends Addonchat
 		if (!empty($result))
 		{
 			/* Update the cache */
-			$tools->killCache();
+			parent::tools()->killCache();
 
 			$query = $this->_smcFunc['db_query']('', '
 				UPDATE {db_prefix}'. parent::$_dbTableName .'
@@ -246,7 +251,7 @@ class AddonChatServer extends Addonchat
 					product_code = {string:product_code},
 					customer_code = {string:customer_code}',
 				array(
-					'edition_code' =>$data[0],
+					'edition_code' => $data[0],
 					'modules' => $data[1],
 					'remote_auth_capable' => $data[2],
 					'full_service' => $data[3],
@@ -287,6 +292,5 @@ class AddonChatServer extends Addonchat
 					'customer_code',
 				)
 			);
-
 	}
 }
