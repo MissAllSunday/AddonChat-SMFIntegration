@@ -122,7 +122,7 @@ class AddonChatServer extends Addonchat
 		$url = 'http://' . $gSettings['server_name'] . '/scwho.php?style=0&id=' . $this->_settings->getSetting('number_id') . '&port=' . $gSettings['tcp_port'] .'&roompw=' . md5($this->_settings->getSetting('pass'));
 
 		/* Use the cache */
-		if (($return = cache_get_data(parent::$name .':whoschatting', 30)) == null)
+		if (($return = cache_get_data(parent::$name .':whoschatting', 10)) == null)
 		{
 			/* Attempts to fetch data from an URL, regardless of PHP's allow_url_fopen setting */
 			$data = $this->fetch_web_data($url);
@@ -142,7 +142,11 @@ class AddonChatServer extends Addonchat
 			foreach($temp2 as $t)
 				if (is_array($t))
 					if (!empty($t[1]))
+					{
+						$return['users'][$t[3]]['room'] = $t[2];
+						$return['users'][$t[3]]['username'] = $t[1];
 						$usernames[] = $t[1];
+					}
 
 			/* Load the users info */
 			$ids = loadMemberData($usernames, true, 'normal');
@@ -152,14 +156,11 @@ class AddonChatServer extends Addonchat
 				foreach ($ids as $i)
 				{
 					loadMemberContext($i);
-					$user[$i] = $memberContext[$i]['link'];
+					$return['users'][$i]['link'] = $memberContext[$i]['link'];
 				}
 
-			/* Append the data */
-			$return['users'] = $user;
-
 			/* Get the number of users */
-			$return['number'] = count($temp);
+			$return['number'] = count($return['users']);
 
 			/* Cache this beauty */
 			cache_put_data(parent::$name .':whoschatting', $return, 30);
