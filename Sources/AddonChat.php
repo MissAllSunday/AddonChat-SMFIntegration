@@ -208,6 +208,9 @@ class AddonChat
 	 */
 	public static function actions(&$actions)
 	{
+		/* Lets call the language file here so the whos page can recognize the chat action */
+		loadLanguage(self::$name);
+
 		$actions['chat'] = array(self::$name .'.php', self::$name .'::main');
 	}
 
