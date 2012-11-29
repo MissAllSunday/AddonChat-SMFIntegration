@@ -27,7 +27,7 @@
 
 			if (!empty($whosChat['users']))
 				foreach($whosChat['users'] as $chatUsers)
-					echo $chatUsers['link'] ,' on ', $chatUsers['room'] ,', ';
+					echo $chatUsers['link'] ,'', (AddonChat::tools()->enable('boardIndex_rooms') ? 'on '. $chatUsers['room'] : '' ), ', ';
 
 			else
 				echo AddonChat::tools()->getText('users_no_active');
