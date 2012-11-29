@@ -106,7 +106,7 @@ class AddonChatServer extends Addonchat
 	 */
 	public function whosChatting()
 	{
-		global $memberContext;
+		global $memberContext, $txt;
 
 		/* Get the global settings */
 		$gSettings = $this->_settings->globalSettingAll();
@@ -156,7 +156,7 @@ class AddonChatServer extends Addonchat
 				foreach ($ids as $i)
 				{
 					loadMemberContext($i);
-					$return['users'][$i]['link'] = $memberContext[$i]['link'];
+					$return['users'][$i]['link'] = '<a href="' . $memberContext[$i]['href'] . '" title="' . $txt['profile_of'] . ' ' . $memberContext[$i]['username'] . '" style="color:'. $memberContext[$i]['group_color'] .';">' . $memberContext[$i]['username'] . '</a>';
 				}
 
 			/* Get the number of users */
