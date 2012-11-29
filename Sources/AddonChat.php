@@ -52,7 +52,7 @@ function AddonChat_autoloader($class_name)
 spl_autoload_register('AddonChat_autoloader');
 
 /**
- * Wrapper function, SMF cannot handle static methods being called via a variable: $static_method();
+ * Wrapper function because laziness...
  *
  * @access public
  * @return void
@@ -233,7 +233,7 @@ class AddonChat
 		/* Get the permissions array */
 		$temp = self::$permissions;
 
-		/* Print specific permissions by user */
+		/* Print specific permissions by usergroup */
 		foreach ($temp as $k)
 			$permissionList['membergroup'][self::$name .'_'. $k] = array(false, self::$name .'_per_classic', self::$name .'_per_simple');
 	}

@@ -54,7 +54,7 @@ class AddonChatServer extends Addonchat
 		/* Call the parent */
 		parent::__construct();
 
-		/* We need to global settings */
+		/* We need the global settings */
 		$this->_settings = parent::tools();
 	}
 

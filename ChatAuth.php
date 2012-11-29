@@ -130,6 +130,9 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 			print "chatpane.format.recompile = true\n";
 		}
 
+		/* Set the users link */
+		print "url.remote.user.0 = \"Profile\", \"" . $boardurl . "/ChatLink.php\", \"_blank\", \"false\"\n";
+
 		/* General settings */
 		if ($tools->enable('max_msg_length'))
 			print 'user.usergroup.max_msg_length = '. $tools->getSetting('max_msg_length') . PHP_EOL;
