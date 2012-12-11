@@ -422,7 +422,7 @@ class AddonChat
 	 */
 	static function lookSettings($return_config = false)
 	{
-		global$scripturl, $context, $sourcedir;
+		global $scripturl, $context, $sourcedir;
 
 		/* We need this */
 		require_once($sourcedir . '/ManageServer.php');
@@ -453,10 +453,6 @@ class AddonChat
 
 		if ($return_config)
 			return $config_vars;
-
-		/* Page settings */
-		$context['post_url'] = $scripturl . '?action=admin;area='. self::$name .';sa=look;save';
-		$context['page_title'] = $tools->getText('default_menu');
 
 		/* Save */
 		if (isset($_GET['save']))
