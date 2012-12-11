@@ -63,7 +63,7 @@
 								language:"en"
 							}
 							var addonchat_param = {
-								username: "'. $user_info['username'] .'",
+								username: "'. $user_info['name'] .'",
 								password: "'. md5($user_info['passwd']) .'",
 								autologin: true,
 								url_exit_enable: true,
