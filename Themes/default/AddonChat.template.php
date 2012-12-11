@@ -5,7 +5,7 @@
  *
  * @package Addonchat Integration
  * @author Suki <missallsunday@simplemachines.org>
- * @copyright 2012 Jessica González
+ * @copyright 2012 Jessica Gonzï¿½lez
  * @license http://www.mozilla.org/MPL/ MPL 2.0
  *
  * @version 1.0
@@ -41,10 +41,8 @@
 		else
 			echo '
 			<div class="cat_bar">
-				<h3 class="catbg">
-					<span class="ie6_header floatleft">
+				<h3 class="catbg centertext">
 						', $context[AddonChat::$name]['tools']->getText('title_main') ,'
-					</span>
 				</h3>
 			</div>
 			<span class="clear upperframe">

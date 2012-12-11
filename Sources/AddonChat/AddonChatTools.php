@@ -276,8 +276,7 @@ class AddonChatTools
 		$request = $smcFunc['db_query']('', '
 			SELECT' . $select_columns . '
 			FROM {db_prefix}members AS mem' . ($select_tables) . '
-			WHERE mem.real_name = {string:user}
-				OR mem.member_name = {string:user}',
+			WHERE mem.member_name = {string:user}',
 			array(
 				'user' => $user,
 				'blank_string' => '',

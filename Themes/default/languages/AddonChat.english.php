@@ -135,4 +135,4 @@ $txt['permissionname_AddonChat_see_chat'] = 'Allow the user to see the Chat';
 $txt['cannot_AddonChat_see_chat'] = 'I\'m sorry, you are not allowed to view the Chat.';
 
 // Who's online strings
-$txt['whoall_chat'] = 'Viewing the <a href="'. $scripturl. '?action=chat">Chat page</a>.';
+$txt['whoall_chat'] = 'Chatting in <a href="'. $scripturl. '?action=chat">live chat</a>.';
