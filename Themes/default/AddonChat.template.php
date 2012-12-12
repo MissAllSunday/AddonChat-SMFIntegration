@@ -71,11 +71,11 @@
 							}
 							 /* ]]> */
 						</script>
-							 <script type="text/javascript"
+						<script type="text/javascript"
 								src="http://'. $context[AddonChat::$name]['tools']->globalSetting('server_name') .'/chat.js"></script>
-							 <noscript>
-								', $context[AddonChat::$name]['tools']->getText('noscript') ,'
-							</noscript>
+						<noscript>
+							', $context[AddonChat::$name]['tools']->getText('noscript') ,'
+						</noscript>
 					</div>
 				</div>
 			</div>
