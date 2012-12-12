@@ -77,27 +77,6 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		if (!empty($user['member_group']))
 			print 'user.usergroup.title = "'. $user['member_group'] .'"'. PHP_EOL;
 
-		/* Set the icon */
-		if (!empty($user['id_group']))
-			switch ($user['id_group'])
-			{
-				case 1:
-					print 'user.usergroup.icon = 2'. PHP_EOL;
-					break;
-				case 2:
-					print 'user.usergroup.icon = 3'. PHP_EOL;
-					break;
-				case 0:
-					print 'user.usergroup.icon = 0'. PHP_EOL;
-					break;
-				default:
-					print 'user.usergroup.icon = 0'. PHP_EOL;
-					break;
-			}
-
-		else
-			print 'user.usergroup.icon = 0'. PHP_EOL;
-
 		/* Load the permissions */
 		$permissions = $tools->loadPermissions($user['additional_groups']);
 
@@ -117,6 +96,33 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 				else
 					print 'user.usergroup.'. $k .' = 0'. PHP_EOL;
 			}
+		}
+
+		/* Set the icon, if the user has the permission, lets show him/her in red */
+		if (!empty($permissions['can_mod_chat']))
+			print 'user.usergroup.icon = 2'. PHP_EOL;
+
+		else
+		{
+			if (!empty($user['id_group']))
+				switch ($user['id_group'])
+				{
+					case 1:
+						print 'user.usergroup.icon = 2'. PHP_EOL;
+						break;
+					case 2:
+						print 'user.usergroup.icon = 3'. PHP_EOL;
+						break;
+					case 0:
+						print 'user.usergroup.icon = 0'. PHP_EOL;
+						break;
+					default:
+						print 'user.usergroup.icon = 0'. PHP_EOL;
+						break;
+				}
+
+			else
+				print 'user.usergroup.icon = 0'. PHP_EOL;
 		}
 
 		/* Show the users avatar */
