@@ -149,15 +149,7 @@ class AddonChatServer extends Addonchat
 					}
 
 			/* Load the users info */
-			$ids = $this->tools()->loadData($usernames);
-			$user = array();
-
-			if (!empty($ids) && is_array($ids))
-				foreach ($ids as $i)
-				{
-					loadMemberContext($i);
-					$return['users'][$i]['link'] = '<a href="' . $memberContext[$i]['href'] . '" title="' . $txt['profile_of'] . ' ' . $memberContext[$i]['name'] . '" style="color:'. $memberContext[$i]['group_color'] .';">' . $memberContext[$i]['name'] . '</a>';
-				}
+			$return['users'] = $this->tools()->loadData($usernames);
 
 			/* Get the number of users */
 			$return['number'] = count($return['users']);

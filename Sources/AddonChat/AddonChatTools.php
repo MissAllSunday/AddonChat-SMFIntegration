@@ -261,7 +261,7 @@ class AddonChatTools
 	/* Load user specific data */
 	public function loadData($user)
 	{
-		global $smcFunc;
+		global $smcFunc, $scripturl, $txt;
 
 		if (empty($user))
 			return false;
@@ -287,19 +287,38 @@ class AddonChatTools
 
 		$return = array();
 
-		while ($row = $smcFunc['db_fetch_assoc']($request))
-			$return = $row;
 
-		/* Append the primary group to the list of additonal groups */
-		if (!empty($return['additional_groups']))
+		/* If $user is a string */
+		if (!is_array($user))
 		{
-			$return['additional_groups'] = explode(',', $return['additional_groups']);
-			array_push($return['additional_groups'], $return['id_post_group'], $return['id_group']);
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+				$return = $row;
+
+			/* Append the primary group to the list of additonal groups */
+			if (!empty($return['additional_groups']))
+			{
+				$return['additional_groups'] = explode(',', $return['additional_groups']);
+				array_push($return['additional_groups'], $return['id_post_group'], $return['id_group']);
+			}
+
+			/* If there is no additional groups, use the primary and post group */
+			else
+				$return['additional_groups'] = array($return['id_post_group'], $return['id_group']);
 		}
 
-		/* If there is no additional groups, use the primary and post group */
+		/* Then we organize the returned data */
 		else
-			$return['additional_groups'] = array($return['id_post_group'], $return['id_group']);
+		{
+			while ($row = $smcFunc['db_fetch_assoc']($request))
+			{
+				$return[$row['id_member']] = array(
+					'id' => $row['id_member'],
+					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '" style="color:'. $row['member_group_color'] .';">' . $row['real_name'] . '</a>',
+					'username' => $row['member_name'],
+					'name' => $row['real_name'],
+				);
+			}
+		}
 
 		$smcFunc['db_free_result']($request);
 
