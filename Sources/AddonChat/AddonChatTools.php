@@ -261,7 +261,7 @@ class AddonChatTools
 	/* Load user specific data */
 	public function loadData($user)
 	{
-		global $smcFunc, $scripturl, $txt;
+		global $smcFunc;
 
 		if (empty($user))
 			return false;
@@ -277,48 +277,70 @@ class AddonChatTools
 		$request = $smcFunc['db_query']('', '
 			SELECT' . $select_columns . '
 			FROM {db_prefix}members AS mem' . ($select_tables) . '
-			'. (is_array($user) ? 'WHERE mem.real_name
-					OR mem.member_name IN ({array_string:user})' : 'WHERE mem.real_name = {string:user}
-				OR mem.member_name = {string:user}'),
+			WHERE mem.real_name = {string:user} OR mem.member_name = {string:user}',
 			array(
 				'user' => $user,
+				'blank_string' => '',
 			)
 		);
 
 		$return = array();
 
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$return = $row;
 
-		/* If $user is a string */
-		if (!is_array($user))
+		/* append the primary group to the list of additonal groups */
+		if (!empty($return['additional_groups']))
 		{
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-				$return = $row;
-
-			/* Append the primary group to the list of additonal groups */
-			if (!empty($return['additional_groups']))
-			{
-				$return['additional_groups'] = explode(',', $return['additional_groups']);
-				array_push($return['additional_groups'], $return['id_post_group'], $return['id_group']);
-			}
-
-			/* If there is no additional groups, use the primary and post group */
-			else
-				$return['additional_groups'] = array($return['id_post_group'], $return['id_group']);
+			$return['additional_groups'] = explode(',', $return['additional_groups']);
+			$return['additional_groups'][] = $return['id_post_group'];
+			$return['additional_groups'][] = $return['id_group'];
 		}
 
-		/* Then we organize the returned data */
+		/* If there is no additional groups, use the primary and post group */
 		else
-		{
-			while ($row = $smcFunc['db_fetch_assoc']($request))
-			{
-				$return[$row['id_member']] = array(
-					'id' => $row['id_member'],
-					'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '" style="color:'. $row['member_group_color'] .';">' . $row['real_name'] . '</a>',
-					'username' => $row['member_name'],
-					'name' => $row['real_name'],
-				);
-			}
-		}
+			$return['additional_groups'] = array($return['id_post_group'], $return['id_group']);
+
+		$smcFunc['db_free_result']($request);
+
+		return $return;
+	}
+
+	/* Acepts an array of users and return their data */
+	public function loadUsersData($users)
+	{
+		global $smcFunc, $scripturl, $txt;
+
+		if (empty($users) || !is_array($users))
+			return false;
+
+		$select_columns = '
+			IFNULL(lo.log_time, 0) AS is_online, mem.id_member, mem.member_name,
+			mem.real_name, mem.date_registered, mem.id_post_group, mem.id_group, mem.passwd, mem.additional_groups, mg.online_color AS member_group_color, IFNULL(mg.group_name, {string:blank_string}) AS member_group';
+		$select_tables = '
+			LEFT JOIN {db_prefix}log_online AS lo ON (lo.id_member = mem.id_member)
+			LEFT JOIN {db_prefix}membergroups AS pg ON (pg.id_group = mem.id_post_group)
+			LEFT JOIN {db_prefix}membergroups AS mg ON (mg.id_group = mem.id_group)';
+
+		$request = $smcFunc['db_query']('', '
+			SELECT' . $select_columns . '
+			FROM {db_prefix}members AS mem' . ($select_tables) . '
+			WHERE mem.real_name IN ({array_string:users})',
+			array(
+				'users' => $users,
+				'blank_string' => '',
+			)
+		);
+
+		$return = array();
+
+		while ($row = $smcFunc['db_fetch_assoc']($request))
+			$return[$row['id_member']] = array(
+				'id' => $row['id_member'],
+				'link' => '<a href="' . $scripturl . '?action=profile;u=' . $row['id_member'] . '" title="' . $txt['profile_of'] . ' ' . $row['real_name'] . '" '. (!empty($row['member_group_color']) ? 'style="color:'. $row['member_group_color'] .';"' : '') .'>' . $row['real_name'] . '</a>',
+				'username' => $row['member_name'],
+				'name' => $row['real_name'],
+			);
 
 		$smcFunc['db_free_result']($request);
 

@@ -149,7 +149,8 @@ class AddonChatServer extends Addonchat
 					}
 
 			/* Load the users info */
-			$return['users'] = $this->tools()->loadData($usernames);
+			if (!empty($usernames) && is_array($usernames))
+				$return['users'] = $this->tools()->loadUsersData($usernames);
 
 			/* Get the number of users */
 			$return['number'] = count($return['users']);
