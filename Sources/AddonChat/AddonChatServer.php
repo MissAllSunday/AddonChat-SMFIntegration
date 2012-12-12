@@ -157,7 +157,6 @@ class AddonChatServer extends Addonchat
 				{
 					loadMemberContext($i);
 					$return['users'][$i]['link'] = '<a href="' . $memberContext[$i]['href'] . '" title="' . $txt['profile_of'] . ' ' . $memberContext[$i]['name'] . '" style="color:'. $memberContext[$i]['group_color'] .';">' . $memberContext[$i]['name'] . '</a>';
-					$memberContext[$i]['username'] . '" style="color:'. $memberContext[$i]['group_color'] .';">' . $memberContext[$i]['username'] . '</a>';
 				}
 
 			/* Get the number of users */

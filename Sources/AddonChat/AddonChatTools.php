@@ -290,7 +290,7 @@ class AddonChatTools
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$return = $row;
 
-		/* append the primary group to the list of additonal groups */
+		/* Append the primary group to the list of additonal groups */
 		if (!empty($return['additional_groups']))
 		{
 			$return['additional_groups'] = explode(',', $return['additional_groups']);
