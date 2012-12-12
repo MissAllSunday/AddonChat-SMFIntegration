@@ -38,11 +38,11 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 
 	/* The mod must be enable */
 	if (!$tools->enable('enable_general'))
-		die('-1'. PHP_EOL);
+		die('-1 chat disable'. PHP_EOL);
 
 	/* We need both username and password */
 	if (!isset($_REQUEST['username']) || !isset($_REQUEST['password']) || empty($_REQUEST['username']) || empty($_REQUEST['password']))
-		die('-1'. PHP_EOL);
+		die('-1 no username or password'. PHP_EOL);
 
 	/* Cleaning */
 	$_REQUEST['username'] = $smcFunc['htmlspecialchars']($smcFunc['htmltrim']($_REQUEST['username']));
@@ -50,7 +50,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 
 	/* You must be capable of using RAS and it must be enable */
 	if (AddonChat::enableRAS() == true)
-		die('-1'. PHP_EOL);
+		die('-1 no RAS'. PHP_EOL);
 
 	/* Load the users data */
 	$user = $tools->loadData($_REQUEST['username']);
@@ -59,8 +59,8 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 	if (!empty($user) && is_array($user))
 	{
 		/* Check if this is the right user */
-		if (md5($user['passwd']) != $_REQUEST['password'] || $user['member_name'] != $_REQUEST['username'])
-			die('-1'. PHP_EOL);
+		if (md5($user['passwd']) != $_REQUEST['password'] || $user['real_name'] != $_REQUEST['username'])
+			die('-1 invalid password or username'. PHP_EOL);
 
 		/* Print it the general info*/
 		print 'scras.version = 2.1'. PHP_EOL;
