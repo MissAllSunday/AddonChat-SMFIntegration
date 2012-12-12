@@ -172,7 +172,8 @@ class AddonChatTools
 	public function globalSettingAll()
 	{
 		/* Get the global Settings */
-		$this->extract();
+		if (empty($this->gSetting))
+			$this->extract();
 
 		if (!empty($this->gSetting))
 			return $this->gSetting;
@@ -288,12 +289,11 @@ class AddonChatTools
 		while ($row = $smcFunc['db_fetch_assoc']($request))
 			$return = $row;
 
-		/* append the primary group to the list of additonal groups */
+		/* Append the primary group to the list of additonal groups */
 		if (!empty($return['additional_groups']))
 		{
 			$return['additional_groups'] = explode(',', $return['additional_groups']);
-			$return['additional_groups'][] = $return['id_post_group'];
-			$return['additional_groups'][] = $return['id_group'];
+			array_push($return['additional_groups'], $return['id_post_group'], $return['id_group']);
 		}
 
 		/* If there is no additional groups, use the primary and post group */

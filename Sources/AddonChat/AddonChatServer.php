@@ -156,7 +156,7 @@ class AddonChatServer extends Addonchat
 				foreach ($ids as $i)
 				{
 					loadMemberContext($i);
-					$return['users'][$i]['link'] = '<a href="' . $memberContext[$i]['href'] . '" title="' . $txt['profile_of'] . ' ' . $memberContext[$i]['username'] . '" style="color:'. $memberContext[$i]['group_color'] .';">' . $memberContext[$i]['username'] . '</a>';
+					$return['users'][$i]['link'] = '<a href="' . $memberContext[$i]['href'] . '" title="' . $txt['profile_of'] . ' ' . $memberContext[$i]['name'] . '" style="color:'. $memberContext[$i]['group_color'] .';">' . $memberContext[$i]['name'] . '</a>';
 				}
 
 			/* Get the number of users */
