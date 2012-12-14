@@ -99,7 +99,7 @@ if (file_exists(dirname(__FILE__) . '/SSI.php') && !defined('SMF'))
 		}
 
 		/* Set the icon, if the user has the permission, lets show him/her in red */
-		if (!empty($permissions['can_mod_chat']))
+		if (in_array(AddonChat::$name .'_can_mod_chat', $permissions))
 			print 'user.usergroup.icon = 2'. PHP_EOL;
 
 		else
